@@ -86,6 +86,14 @@ export default function HomePage() {
             emoji="🏆"
             delay={0.33}
           />
+          <ActionCard
+            href="/farts"
+            bg="#F0865A"
+            title="Record a fart"
+            sub="Capture it, tag the joint, get judged."
+            emoji="💨"
+            delay={0.41}
+          />
         </div>
 
         {!activeId && !loading && (

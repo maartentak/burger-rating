@@ -8,8 +8,11 @@ import { BackButton } from "@/components/BackButton";
 import { Avatar } from "@/components/Avatar";
 import { BurgerIcon } from "@/components/art";
 import { EvaluationModal } from "@/components/EvaluationModal";
+import { FartList } from "@/components/FartList";
+import { useCurators } from "@/lib/useCurators";
 import { tier } from "@/lib/scoring";
 import type { EstablishmentDetail, EvaluationView } from "@/lib/aggregate";
+import type { FartView } from "@/db/data";
 
 export default function EstablishmentPage({
   params,
@@ -27,10 +30,12 @@ export default function EstablishmentPage({
 function Inner({ id }: { id: string }) {
   const router = useRouter();
   const mine = useSearchParams().get("mine");
+  const { activeId } = useCurators();
   const [d, setD] = useState<EstablishmentDetail | null>(null);
   const [demo, setDemo] = useState(false);
   const [notFound, setNotFound] = useState(false);
   const [modal, setModal] = useState<{ title: string; evals: EvaluationView[] } | null>(null);
+  const [farts, setFarts] = useState<FartView[]>([]);
 
   function load() {
     return fetch(`/api/establishments/${id}`)
@@ -42,8 +47,16 @@ function Inner({ id }: { id: string }) {
       .catch(() => setNotFound(true));
   }
 
+  function loadFarts() {
+    fetch(`/api/farts?establishmentId=${id}`)
+      .then((r) => r.json())
+      .then((res) => setFarts(res.farts ?? []))
+      .catch(() => {});
+  }
+
   useEffect(() => {
     load();
+    loadFarts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
@@ -73,10 +86,14 @@ function Inner({ id }: { id: string }) {
 
   return (
     <PhoneShell>
-      <div className="flex items-center gap-3 px-5 pt-4">
-        <BackButton onClick={() => router.push("/board")} />
-        <span className="eyebrow">THE BREAKDOWN</span>
-      </div>
+      {d.photoUrl ? (
+        <Hero d={d} onBack={() => router.push("/board")} />
+      ) : (
+        <div className="flex items-center gap-3 px-5 pt-4">
+          <BackButton onClick={() => router.push("/board")} />
+          <span className="eyebrow">THE BREAKDOWN</span>
+        </div>
+      )}
 
       <div className="flex-1 overflow-y-auto px-5 pb-8 pt-3 no-scrollbar">
         {mine && d.evaluationCount > 0 && (
@@ -90,29 +107,31 @@ function Inner({ id }: { id: string }) {
           </motion.div>
         )}
 
-        {/* Title + avg badge */}
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="font-black leading-[1.05] text-ink"
-              style={{ fontSize: 34, letterSpacing: "-.01em" }}
-            >
-              {d.name}
-            </motion.div>
-            <div className="mt-1.5 font-semibold" style={{ fontSize: 14, color: "rgba(27,23,19,.55)" }}>
-              {d.area}
-              {d.when ? ` · visited ${d.when}` : ""}
+        {/* Title + avg badge — only when there's no photo hero above. */}
+        {!d.photoUrl && (
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="font-black leading-[1.05] text-ink"
+                style={{ fontSize: 34, letterSpacing: "-.01em" }}
+              >
+                {d.name}
+              </motion.div>
+              <div className="mt-1.5 font-semibold" style={{ fontSize: 14, color: "rgba(27,23,19,.55)" }}>
+                {d.area}
+                {d.when ? ` · visited ${d.when}` : ""}
+              </div>
             </div>
+            {d.evaluationCount > 0 && (
+              <div className="card-ink shrink-0 rounded-[18px] px-3.5 py-2.5 text-center" style={{ background: "#E4589B", color: "#fff" }}>
+                <div className="font-black leading-none" style={{ fontSize: 30 }}>{d.total}</div>
+                <div className="font-extrabold" style={{ fontSize: 10, letterSpacing: ".1em" }}>AVG</div>
+              </div>
+            )}
           </div>
-          {d.evaluationCount > 0 && (
-            <div className="card-ink shrink-0 rounded-[18px] px-3.5 py-2.5 text-center" style={{ background: "#E4589B", color: "#fff" }}>
-              <div className="font-black leading-none" style={{ fontSize: 30 }}>{d.total}</div>
-              <div className="font-extrabold" style={{ fontSize: 10, letterSpacing: ".1em" }}>AVG</div>
-            </div>
-          )}
-        </div>
+        )}
 
         {d.evaluationCount === 0 ? (
           <div className="card-ink mt-6 rounded-2xl p-6 text-center" style={{ background: "#FFFDF7" }}>
@@ -256,6 +275,21 @@ function Inner({ id }: { id: string }) {
           </>
         )}
 
+        {/* Farts for this joint */}
+        <div className="mt-6 flex items-center justify-between">
+          <span className="eyebrow" style={{ fontSize: 13 }}>THE FARTS 💨</span>
+          <button
+            onClick={() => router.push(`/farts?establishmentId=${id}`)}
+            className="card-ink rounded-full px-3 py-1.5 font-extrabold text-ink"
+            style={{ background: "#F0865A", fontSize: 12 }}
+          >
+            + Record here
+          </button>
+        </div>
+        <div className="mt-2.5">
+          <FartList farts={farts} activeId={activeId} demo={demo} showJoint={false} onChanged={loadFarts} />
+        </div>
+
         <button
           onClick={() => router.push("/board")}
           className="card-ink mt-6 w-full rounded-full py-4 font-extrabold text-ink"
@@ -278,6 +312,46 @@ function Inner({ id }: { id: string }) {
         />
       )}
     </PhoneShell>
+  );
+}
+
+function Hero({ d, onBack }: { d: EstablishmentDetail; onBack: () => void }) {
+  return (
+    <div className="relative h-[210px] w-full shrink-0 overflow-hidden">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={d.photoUrl!}
+        alt={d.name}
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+      <div
+        className="absolute inset-0"
+        style={{ background: "linear-gradient(to top, rgba(27,23,19,.85) 6%, rgba(27,23,19,.15) 55%, rgba(27,23,19,.35) 100%)" }}
+      />
+      <div className="absolute left-5 right-5 top-4 flex items-center justify-between">
+        <BackButton onClick={onBack} dark />
+        {d.evaluationCount > 0 && (
+          <div className="card-ink rounded-[16px] px-3 py-2 text-center" style={{ background: "#E4589B", color: "#fff" }}>
+            <div className="font-black leading-none" style={{ fontSize: 26 }}>{d.total}</div>
+            <div className="font-extrabold" style={{ fontSize: 9, letterSpacing: ".1em" }}>AVG</div>
+          </div>
+        )}
+      </div>
+      <div className="absolute bottom-3 left-5 right-5">
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="font-black leading-[1.02]"
+          style={{ fontSize: 32, letterSpacing: "-.01em", color: "#FFF6E3", textShadow: "0 2px 12px rgba(0,0,0,.5)" }}
+        >
+          {d.name}
+        </motion.div>
+        <div className="font-semibold" style={{ fontSize: 13.5, color: "rgba(255,246,227,.85)" }}>
+          {d.area}
+          {d.when ? ` · visited ${d.when}` : ""}
+        </div>
+      </div>
+    </div>
   );
 }
 

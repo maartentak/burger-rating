@@ -210,7 +210,11 @@ function CuratorCard({
   );
 }
 
-/** Downscale an uploaded image to a square-ish data URL to keep it lightweight. */
+/**
+ * Downscale an uploaded image to a square-ish data URL to keep it lightweight.
+ * Outputs PNG so transparent avatars stay transparent (JPEG would flatten alpha
+ * to black) — the signature colour circle then shows through behind the cut-out.
+ */
 function downscale(file: File, max: number): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -226,7 +230,7 @@ function downscale(file: File, max: number): Promise<string> {
         const ctx = canvas.getContext("2d");
         if (!ctx) return reject(new Error("no ctx"));
         ctx.drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL("image/jpeg", 0.82));
+        resolve(canvas.toDataURL("image/png"));
       };
       img.onerror = reject;
       img.src = reader.result as string;

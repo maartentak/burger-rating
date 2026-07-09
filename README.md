@@ -182,6 +182,14 @@ build (`scripts/gen-icons.mjs`). To use your own artwork:
 If no `icon-source.*` is present it falls back to the on-brand burger mascot
 (`assets/icon-default.svg`). To regenerate locally: `npm run icons`.
 
+## 4d · The Fart Booth (one-time table setup)
+
+The 💨 "Record a fart" feature needs two extra tables. Paste **`neon-farts.sql`**
+into the Neon SQL Editor once (same as before → **SQL Editor → paste → Run**).
+After that: Home → **Record a fart** → tap to record (grant mic access), name it,
+optionally tag a joint, and drop it on the record. The patrol scores each fart
+0–100 and they rank on **The Fart Chart** (also shown per joint on its breakdown).
+
 ## 5 · Add the curator photos
 
 Two ways:

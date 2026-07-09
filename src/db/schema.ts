@@ -77,6 +77,35 @@ export const evaluations = pgTable("evaluations", {
     .defaultNow(),
 });
 
+/** A recorded fart, optionally tied to a joint. Audio is a base64 data URL. */
+export const farts = pgTable("farts", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  establishmentId: uuid("establishment_id").references(() => establishments.id, {
+    onDelete: "set null",
+  }),
+  curatorId: text("curator_id").notNull(), // who recorded it
+  name: text("name").notNull().default(""),
+  audio: text("audio").notNull(), // data URL, e.g. data:audio/webm;base64,...
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+/** One curator's score (0-100) for a fart. One per curator per fart. */
+export const fartScores = pgTable("fart_scores", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  fartId: uuid("fart_id")
+    .notNull()
+    .references(() => farts.id, { onDelete: "cascade" }),
+  curatorId: text("curator_id").notNull(),
+  score: integer("score").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
 export type EstablishmentRow = typeof establishments.$inferSelect;
 export type EvaluationRow = typeof evaluations.$inferSelect;
 export type CuratorRow = typeof curators.$inferSelect;
+export type FartRow = typeof farts.$inferSelect;
+export type FartScoreRow = typeof fartScores.$inferSelect;

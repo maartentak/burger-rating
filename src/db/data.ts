@@ -1,6 +1,12 @@
-import { eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { getDb, isDbConfigured } from "./client";
-import { curators as curatorsTable, establishments, evaluations } from "./schema";
+import {
+  curators as curatorsTable,
+  establishments,
+  evaluations,
+  farts,
+  fartScores,
+} from "./schema";
 import type { EstablishmentRow, EvaluationRow } from "./schema";
 import { buildDemoData } from "./demo";
 import { DEFAULT_CURATORS, type Curator } from "@/lib/curators";
@@ -130,6 +136,118 @@ export async function deleteEstablishment(id: string): Promise<boolean> {
     .delete(establishments)
     .where(eq(establishments.id, id))
     .returning({ id: establishments.id });
+  return rows.length > 0;
+}
+
+// ---------------- Farts 💨 ----------------
+
+export interface FartView {
+  id: string;
+  name: string;
+  curatorId: string;
+  curatorName: string;
+  color: string;
+  establishmentId: string | null;
+  establishmentName: string | null;
+  avgScore: number | null;
+  scoreCount: number;
+  scores: { curatorId: string; score: number }[];
+  createdAt: string;
+}
+
+export async function createFart(input: {
+  curatorId: string;
+  establishmentId?: string | null;
+  name?: string;
+  audio: string;
+}) {
+  const db = getDb();
+  const [row] = await db
+    .insert(farts)
+    .values({
+      curatorId: input.curatorId,
+      establishmentId: input.establishmentId ?? null,
+      name: (input.name ?? "").slice(0, 80),
+      audio: input.audio,
+    })
+    .returning({ id: farts.id });
+  return row;
+}
+
+export async function listFarts(establishmentId?: string): Promise<FartView[]> {
+  if (!isDbConfigured) return [];
+  const db = getDb();
+  const cols = {
+    id: farts.id,
+    name: farts.name,
+    curatorId: farts.curatorId,
+    establishmentId: farts.establishmentId,
+    createdAt: farts.createdAt,
+  };
+  const rows = establishmentId
+    ? await db.select(cols).from(farts).where(eq(farts.establishmentId, establishmentId)).orderBy(desc(farts.createdAt))
+    : await db.select(cols).from(farts).orderBy(desc(farts.createdAt));
+
+  const [scoreRows, estRows, curators] = await Promise.all([
+    db.select().from(fartScores),
+    db.select({ id: establishments.id, name: establishments.name }).from(establishments),
+    getCurators(),
+  ]);
+  const estName = (id: string | null) =>
+    id ? estRows.find((e) => e.id === id)?.name ?? null : null;
+  const cName = (id: string) => curators.find((c) => c.id === id)?.name ?? id;
+  const cColor = (id: string) => curators.find((c) => c.id === id)?.color ?? "#F48FBB";
+
+  const views: FartView[] = rows.map((f) => {
+    const mine = scoreRows.filter((s) => s.fartId === f.id);
+    const avg = mine.length ? round(mean(mine.map((s) => s.score))) : null;
+    return {
+      id: f.id,
+      name: f.name || "Untitled toot",
+      curatorId: f.curatorId,
+      curatorName: cName(f.curatorId),
+      color: cColor(f.curatorId),
+      establishmentId: f.establishmentId,
+      establishmentName: estName(f.establishmentId),
+      avgScore: avg,
+      scoreCount: mine.length,
+      scores: mine.map((s) => ({ curatorId: s.curatorId, score: s.score })),
+      createdAt: f.createdAt.toISOString(),
+    };
+  });
+
+  // Ranked: highest average first, unscored last, newest as tiebreak.
+  return views.sort((a, b) => {
+    const av = a.avgScore ?? -1;
+    const bv = b.avgScore ?? -1;
+    if (bv !== av) return bv - av;
+    return b.createdAt.localeCompare(a.createdAt);
+  });
+}
+
+export async function getFartAudio(id: string): Promise<string | null> {
+  if (!isDbConfigured) return null;
+  const db = getDb();
+  const [row] = await db.select({ audio: farts.audio }).from(farts).where(eq(farts.id, id));
+  return row?.audio ?? null;
+}
+
+export async function scoreFart(fartId: string, curatorId: string, score: number) {
+  const db = getDb();
+  const clamped = Math.max(0, Math.min(100, Math.round(score)));
+  const updated = await db
+    .update(fartScores)
+    .set({ score: clamped })
+    .where(and(eq(fartScores.fartId, fartId), eq(fartScores.curatorId, curatorId)))
+    .returning({ id: fartScores.id });
+  if (updated.length === 0) {
+    await db.insert(fartScores).values({ fartId, curatorId, score: clamped });
+  }
+}
+
+export async function deleteFart(id: string): Promise<boolean> {
+  const db = getDb();
+  const rows = await db.delete(farts).where(eq(farts.id, id)).returning({ id: farts.id });
   return rows.length > 0;
 }
 
