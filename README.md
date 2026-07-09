@@ -20,6 +20,7 @@ Built with **Next.js 15** (App Router) · **Tailwind CSS v4** · **Framer Motion
 | Scorecard | `/curate/[id]/scorecard` | Weighted receipt (70% burger / 30% joint) + lock it in |
 | Establishment | `/establishment/[id]` | Combined scores, joint bars, **key disagreements**, curator takes |
 | The Grease Board | `/board` | Podium, ranked list, hall of fame, beef of the month, trends & hidden insights |
+| Split the bill | `/split` | Splitwise-style tab — log who paid, split it, see who owes who & settle up |
 
 **Scoring:** each dial is 0–100. The gut **Overall burger** and **Overall joint**
 scores are what count — `total = round(overall_burger × 0.7 + overall_joint × 0.3)`.
@@ -189,6 +190,18 @@ into the Neon SQL Editor once (same as before → **SQL Editor → paste → Run
 After that: Home → **Record a fart** → tap to record (grant mic access), name it,
 optionally tag a joint, and drop it on the record. The patrol scores each fart
 0–100 and they rank on **The Fart Chart** (also shown per joint on its breakdown).
+
+## 4e · Split the bill 💸 (one-time table setup)
+
+The 💸 **Split the bill** feature keeps a running tab, Splitwise-style. It needs
+one extra table. Paste **`neon-split.sql`** into the Neon SQL Editor once (same as
+before → **SQL Editor → paste → Run**). Or, if you use the terminal, `npm run
+db:push` picks it up from the schema like everything else.
+
+After that: Home → **Split the bill** → add an expense (what for, how much in €,
+who paid, who it's split between, optionally tag a joint). The app computes each
+curator's balance and the **minimal set of payments** to settle everyone up.
+Amounts are stored in cents so the balance sheet always nets to exactly zero.
 
 ## Previous Seasons (historical archives)
 

@@ -87,12 +87,20 @@ export default function HomePage() {
             delay={0.33}
           />
           <ActionCard
+            href="/split"
+            bg="#EFAF5F"
+            title="Split the bill"
+            sub="Track the tab & settle up."
+            emoji="💸"
+            delay={0.41}
+          />
+          <ActionCard
             href="/farts"
             bg="#F0865A"
             title="Record a fart"
             sub="Capture it, tag the joint, get judged."
             emoji="💨"
-            delay={0.41}
+            delay={0.49}
           />
           <ActionCard
             href="/seasons"
@@ -100,7 +108,7 @@ export default function HomePage() {
             title="Previous seasons"
             sub="The pizza era & other past glories."
             emoji="📜"
-            delay={0.49}
+            delay={0.57}
           />
         </div>
 
