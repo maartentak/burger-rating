@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "icons": "node scripts/gen-icons.mjs",
+    "seasons:pizza": "node scripts/build-season-pizza.mjs",
     "db:push": "drizzle-kit push",
     "db:seed": "tsx src/db/seed.ts"
   },

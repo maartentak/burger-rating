@@ -1,0 +1,1890 @@
+{
+  "slug": "pizza-2024",
+  "cuisine": "Pizza",
+  "emoji": "🍕",
+  "title": "The Pizza Era",
+  "dateRange": "Nov 2023 – Nov 2024",
+  "blurb": "Before the burgers, there was dough. Six pizzerias, one crown.",
+  "scaleNote": "Scores are normalized to %. The rating scale changed from 1–5 to 1–10 partway through the season, so early scores skew a touch high — compare with a pinch of oregano.",
+  "metricLabels": [
+    {
+      "key": "taste",
+      "label": "Taste"
+    },
+    {
+      "key": "texture",
+      "label": "Texture"
+    },
+    {
+      "key": "fold",
+      "label": "Foldability"
+    },
+    {
+      "key": "sauce",
+      "label": "Sauce/crust ratio"
+    },
+    {
+      "key": "tastiness",
+      "label": "Tastiness"
+    }
+  ],
+  "jointLabels": [
+    {
+      "key": "ambiance",
+      "label": "Ambiance"
+    },
+    {
+      "key": "service",
+      "label": "Service"
+    },
+    {
+      "key": "value",
+      "label": "Price / quality"
+    }
+  ],
+  "places": [
+    {
+      "id": "nicoletta",
+      "name": "Nicoletta",
+      "when": "Nov 2023",
+      "ts": "11/8/2023 19:51:32",
+      "itemScore": 80,
+      "jointScore": 67,
+      "total": 76,
+      "reviews": [
+        {
+          "ts": "11/8/2023 19:51:32",
+          "when": "Nov 2023",
+          "place": "Nicoletta",
+          "itemName": "Donna Carmela",
+          "curatorId": "marty",
+          "curatorName": "Marty",
+          "color": "#F0865A",
+          "price": 23,
+          "metrics": {
+            "taste": 80,
+            "texture": 80,
+            "fold": 80,
+            "sauce": 60,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 60,
+            "service": 80,
+            "value": 60
+          },
+          "itemScore": 76,
+          "jointScore": 67,
+          "total": 73,
+          "worth": 60,
+          "sauce": "Red",
+          "cheese": "Buffela",
+          "bias": {
+            "day": 80,
+            "hunger": 80,
+            "horny": 40
+          },
+          "quote": ""
+        },
+        {
+          "ts": "11/8/2023 19:52:58",
+          "when": "Nov 2023",
+          "place": "Nicoletta",
+          "itemName": "Gustoza",
+          "curatorId": "axel",
+          "curatorName": "Axel",
+          "color": "#F48FBB",
+          "price": 23,
+          "metrics": {
+            "taste": 80,
+            "texture": 80,
+            "fold": 80,
+            "sauce": 100,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 60,
+            "service": 60,
+            "value": 60
+          },
+          "itemScore": 84,
+          "jointScore": 60,
+          "total": 77,
+          "worth": 100,
+          "sauce": "Red",
+          "cheese": "Mozerella, Gorgonzola",
+          "bias": {
+            "day": 60,
+            "hunger": 60,
+            "horny": 80
+          },
+          "quote": ""
+        },
+        {
+          "ts": "11/8/2023 19:53:04",
+          "when": "Nov 2023",
+          "place": "Nicoletta",
+          "itemName": "Deliziosa",
+          "curatorId": "simon",
+          "curatorName": "Simon",
+          "color": "#F5C445",
+          "price": 22,
+          "metrics": {
+            "taste": 80,
+            "texture": 80,
+            "fold": 80,
+            "sauce": 60,
+            "tastiness": 100
+          },
+          "joint": {
+            "ambiance": 60,
+            "service": 80,
+            "value": 80
+          },
+          "itemScore": 80,
+          "jointScore": 73,
+          "total": 78,
+          "worth": 80,
+          "sauce": "White",
+          "cheese": "No cheese",
+          "bias": {
+            "day": 60,
+            "hunger": 80,
+            "horny": 100
+          },
+          "quote": ""
+        }
+      ]
+    },
+    {
+      "id": "graan",
+      "name": "Graan",
+      "when": "Dec 2023",
+      "ts": "12/17/2023 20:50:28",
+      "itemScore": 61,
+      "jointScore": 56,
+      "total": 60,
+      "reviews": [
+        {
+          "ts": "12/17/2023 20:50:28",
+          "when": "Dec 2023",
+          "place": "Graan",
+          "itemName": "Pancetta pompoen",
+          "curatorId": "simon",
+          "curatorName": "Simon",
+          "color": "#F5C445",
+          "price": 19.5,
+          "metrics": {
+            "taste": 80,
+            "texture": 60,
+            "fold": 40,
+            "sauce": 100,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 60,
+            "service": 60,
+            "value": 60
+          },
+          "itemScore": 72,
+          "jointScore": 60,
+          "total": 68,
+          "worth": 60,
+          "sauce": "White",
+          "cheese": "Geitenkaas",
+          "bias": {
+            "day": 60,
+            "hunger": 60,
+            "horny": 80
+          },
+          "quote": ""
+        },
+        {
+          "ts": "12/17/2023 20:51:40",
+          "when": "Dec 2023",
+          "place": "Graan",
+          "itemName": "Palmkool",
+          "curatorId": "axel",
+          "curatorName": "Axel",
+          "color": "#F48FBB",
+          "price": 19.5,
+          "metrics": {
+            "taste": 40,
+            "texture": 60,
+            "fold": 40,
+            "sauce": 80,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 40,
+            "service": 60,
+            "value": 40
+          },
+          "itemScore": 60,
+          "jointScore": 47,
+          "total": 56,
+          "worth": 60,
+          "sauce": "Red",
+          "cheese": "Gorgonzola",
+          "bias": {
+            "day": 80,
+            "hunger": 40,
+            "horny": 40
+          },
+          "quote": ""
+        },
+        {
+          "ts": "12/17/2023 20:51:41",
+          "when": "Dec 2023",
+          "place": "Graan",
+          "itemName": "Zoete aardappel en pastinaak",
+          "curatorId": "marty",
+          "curatorName": "Marty",
+          "color": "#F0865A",
+          "price": 18.5,
+          "metrics": {
+            "taste": 40,
+            "texture": 40,
+            "fold": 40,
+            "sauce": 80,
+            "tastiness": 60
+          },
+          "joint": {
+            "ambiance": 40,
+            "service": 80,
+            "value": 60
+          },
+          "itemScore": 52,
+          "jointScore": 60,
+          "total": 54,
+          "worth": 60,
+          "sauce": "White",
+          "cheese": "Van Tricht",
+          "bias": {
+            "day": 80,
+            "hunger": 20,
+            "horny": 80
+          },
+          "quote": "Mooie bediening"
+        }
+      ]
+    },
+    {
+      "id": "barbarello",
+      "name": "Barbarello",
+      "when": "Mar 2024",
+      "ts": "3/6/2024 20:23:25",
+      "itemScore": 83,
+      "jointScore": 62,
+      "total": 77,
+      "reviews": [
+        {
+          "ts": "3/6/2024 20:23:25",
+          "when": "Mar 2024",
+          "place": "Barbarello",
+          "itemName": "Salami al tarfuffo",
+          "curatorId": "marty",
+          "curatorName": "Marty",
+          "color": "#F0865A",
+          "price": 22,
+          "metrics": {
+            "taste": 100,
+            "texture": 100,
+            "fold": 80,
+            "sauce": 60,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 40,
+            "service": 40,
+            "value": 80
+          },
+          "itemScore": 84,
+          "jointScore": 53,
+          "total": 75,
+          "worth": 80,
+          "sauce": "White",
+          "cheese": "Parmazan",
+          "bias": {
+            "day": 60,
+            "hunger": 80,
+            "horny": 80
+          },
+          "quote": "Nah"
+        },
+        {
+          "ts": "3/6/2024 20:25:37",
+          "when": "Mar 2024",
+          "place": "Barbarello",
+          "itemName": "Salsiccia",
+          "curatorId": "simon",
+          "curatorName": "Simon",
+          "color": "#F5C445",
+          "price": 20,
+          "metrics": {
+            "taste": 60,
+            "texture": 100,
+            "fold": 100,
+            "sauce": 80,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 80,
+            "service": 80,
+            "value": 60
+          },
+          "itemScore": 84,
+          "jointScore": 73,
+          "total": 81,
+          "worth": 60,
+          "sauce": "Red",
+          "cheese": "Fior dit latte",
+          "bias": {
+            "day": 100,
+            "hunger": 40,
+            "horny": 80
+          },
+          "quote": ""
+        },
+        {
+          "ts": "3/6/2024 20:26:53",
+          "when": "Mar 2024",
+          "place": "Barbarello",
+          "itemName": "Scamorza e Jalapenis",
+          "curatorId": "axel",
+          "curatorName": "Axel",
+          "color": "#F48FBB",
+          "price": 17,
+          "metrics": {
+            "taste": 80,
+            "texture": 80,
+            "fold": 100,
+            "sauce": 80,
+            "tastiness": 60
+          },
+          "joint": {
+            "ambiance": 60,
+            "service": 40,
+            "value": 80
+          },
+          "itemScore": 80,
+          "jointScore": 60,
+          "total": 74,
+          "worth": 60,
+          "sauce": "Red",
+          "cheese": "Scamorza",
+          "bias": {
+            "day": 80,
+            "hunger": 60,
+            "horny": 80
+          },
+          "quote": "Interieur had geen ziel, denk ik toch en ja wie ben ik?"
+        }
+      ]
+    },
+    {
+      "id": "pizzeria-pugliese",
+      "name": "Pizzeria Pugliese",
+      "when": "Jul 2024",
+      "ts": "7/3/2024 20:27:29",
+      "itemScore": 78,
+      "jointScore": 76,
+      "total": 77,
+      "reviews": [
+        {
+          "ts": "7/3/2024 20:27:29",
+          "when": "Jul 2024",
+          "place": "Pizzeria Pugliese",
+          "itemName": "Picantina",
+          "curatorId": "axel",
+          "curatorName": "Axel",
+          "color": "#F48FBB",
+          "price": 18,
+          "metrics": {
+            "taste": 70,
+            "texture": 80,
+            "fold": 70,
+            "sauce": 70,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 70,
+            "service": 70,
+            "value": 90
+          },
+          "itemScore": 74,
+          "jointScore": 77,
+          "total": 75,
+          "worth": 80,
+          "sauce": "Red",
+          "cheese": "Ricotta",
+          "bias": {
+            "day": 60,
+            "hunger": 80,
+            "horny": 60
+          },
+          "quote": ""
+        },
+        {
+          "ts": "7/3/2024 20:27:40",
+          "when": "Jul 2024",
+          "place": "Pizzeria Pugliese",
+          "itemName": "Pizza piccanta",
+          "curatorId": "simon",
+          "curatorName": "Simon",
+          "color": "#F5C445",
+          "price": 18,
+          "metrics": {
+            "taste": 80,
+            "texture": 90,
+            "fold": 100,
+            "sauce": 90,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 70,
+            "service": 80,
+            "value": 80
+          },
+          "itemScore": 88,
+          "jointScore": 77,
+          "total": 85,
+          "worth": 90,
+          "sauce": "Red",
+          "cheese": "Ricotta",
+          "bias": {
+            "day": 90,
+            "hunger": 70,
+            "horny": 70
+          },
+          "quote": ""
+        },
+        {
+          "ts": "7/3/2024 20:27:50",
+          "when": "Jul 2024",
+          "place": "Pizzeria Pugliese",
+          "itemName": "Burata di nogwat",
+          "curatorId": "marty",
+          "curatorName": "Marty",
+          "color": "#F0865A",
+          "price": 22,
+          "metrics": {
+            "taste": 70,
+            "texture": 70,
+            "fold": 90,
+            "sauce": 70,
+            "tastiness": 60
+          },
+          "joint": {
+            "ambiance": 70,
+            "service": 80,
+            "value": 70
+          },
+          "itemScore": 72,
+          "jointScore": 73,
+          "total": 72,
+          "worth": 80,
+          "sauce": "Red",
+          "cheese": "Buffela",
+          "bias": {
+            "day": 80,
+            "hunger": 70,
+            "horny": 80
+          },
+          "quote": "Aperol hielp"
+        }
+      ]
+    },
+    {
+      "id": "la-pizza-bella",
+      "name": "La Pizza è Bella",
+      "when": "Oct 2024",
+      "ts": "10/16/2024 21:17:06",
+      "itemScore": 65,
+      "jointScore": 43,
+      "total": 58,
+      "reviews": [
+        {
+          "ts": "10/16/2024 21:17:06",
+          "when": "Oct 2024",
+          "place": "La Pizza è Bella",
+          "itemName": "Fungi y Something Calzone",
+          "curatorId": "marty",
+          "curatorName": "Marty",
+          "color": "#F0865A",
+          "price": 20,
+          "metrics": {
+            "taste": 70,
+            "texture": 80,
+            "fold": 70,
+            "sauce": 40,
+            "tastiness": 70
+          },
+          "joint": {
+            "ambiance": 30,
+            "service": 40,
+            "value": 60
+          },
+          "itemScore": 66,
+          "jointScore": 43,
+          "total": 59,
+          "worth": 70,
+          "sauce": "White",
+          "cheese": "Mozerella, Provolone",
+          "bias": {
+            "day": 70,
+            "hunger": 80,
+            "horny": 80
+          },
+          "quote": "Mwa"
+        },
+        {
+          "ts": "10/16/2024 21:17:14",
+          "when": "Oct 2024",
+          "place": "La Pizza è Bella",
+          "itemName": "Pizza pistachio",
+          "curatorId": "axel",
+          "curatorName": "Axel",
+          "color": "#F48FBB",
+          "price": 20,
+          "metrics": {
+            "taste": 60,
+            "texture": 50,
+            "fold": 70,
+            "sauce": 60,
+            "tastiness": 60
+          },
+          "joint": {
+            "ambiance": 40,
+            "service": 10,
+            "value": 60
+          },
+          "itemScore": 60,
+          "jointScore": 37,
+          "total": 53,
+          "worth": 40,
+          "sauce": "White",
+          "cheese": "Mozerella",
+          "bias": {
+            "day": 60,
+            "hunger": 50,
+            "horny": 40
+          },
+          "quote": "Worst service this side of the taal barriere"
+        },
+        {
+          "ts": "10/16/2024 21:22:33",
+          "when": "Oct 2024",
+          "place": "La Pizza è Bella",
+          "itemName": "Diabolica",
+          "curatorId": "simon",
+          "curatorName": "Simon",
+          "color": "#F5C445",
+          "price": 20,
+          "metrics": {
+            "taste": 60,
+            "texture": 60,
+            "fold": 80,
+            "sauce": 80,
+            "tastiness": 60
+          },
+          "joint": {
+            "ambiance": 50,
+            "service": 50,
+            "value": 50
+          },
+          "itemScore": 68,
+          "jointScore": 50,
+          "total": 63,
+          "worth": 70,
+          "sauce": "Red",
+          "cheese": "Mozerella",
+          "bias": {
+            "day": 70,
+            "hunger": 50,
+            "horny": 70
+          },
+          "quote": ""
+        }
+      ]
+    },
+    {
+      "id": "gio-pizza-bar",
+      "name": "Gio pizza bar",
+      "when": "Nov 2024",
+      "ts": "11/27/2024 21:38:37",
+      "itemScore": 78,
+      "jointScore": 71,
+      "total": 76,
+      "reviews": [
+        {
+          "ts": "11/27/2024 21:38:37",
+          "when": "Nov 2024",
+          "place": "Gio pizza bar",
+          "itemName": "Gio's",
+          "curatorId": "marty",
+          "curatorName": "Marty",
+          "color": "#F0865A",
+          "price": 17,
+          "metrics": {
+            "taste": 80,
+            "texture": 90,
+            "fold": 70,
+            "sauce": 80,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 90,
+            "service": 80,
+            "value": 70
+          },
+          "itemScore": 80,
+          "jointScore": 80,
+          "total": 80,
+          "worth": 70,
+          "sauce": "Red",
+          "cheese": "No cheese",
+          "bias": {
+            "day": 60,
+            "hunger": 80,
+            "horny": 60
+          },
+          "quote": "Ik was heel laat"
+        },
+        {
+          "ts": "11/27/2024 21:41:27",
+          "when": "Nov 2024",
+          "place": "Gio pizza bar",
+          "itemName": "Chilli my lips",
+          "curatorId": "axel",
+          "curatorName": "Axel",
+          "color": "#F48FBB",
+          "price": 16,
+          "metrics": {
+            "taste": 80,
+            "texture": 90,
+            "fold": 90,
+            "sauce": 80,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 60,
+            "service": 60,
+            "value": 80
+          },
+          "itemScore": 84,
+          "jointScore": 67,
+          "total": 79,
+          "worth": 80,
+          "sauce": "Red",
+          "cheese": "Mozerella",
+          "bias": {
+            "day": 70,
+            "hunger": 80,
+            "horny": 70
+          },
+          "quote": ""
+        },
+        {
+          "ts": "11/27/2024 21:48:07",
+          "when": "Nov 2024",
+          "place": "Gio pizza bar",
+          "itemName": "Meet my meat",
+          "curatorId": "simon",
+          "curatorName": "Simon",
+          "color": "#F5C445",
+          "price": 18,
+          "metrics": {
+            "taste": 70,
+            "texture": 70,
+            "fold": 70,
+            "sauce": 60,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 70,
+            "service": 50,
+            "value": 80
+          },
+          "itemScore": 70,
+          "jointScore": 67,
+          "total": 69,
+          "worth": 70,
+          "sauce": "White",
+          "cheese": "Mozerella",
+          "bias": {
+            "day": 70,
+            "hunger": 50,
+            "horny": 100
+          },
+          "quote": "Aangebrande smaak"
+        }
+      ]
+    }
+  ],
+  "podium": [
+    {
+      "id": "barbarello",
+      "name": "Barbarello",
+      "when": "Mar 2024",
+      "ts": "3/6/2024 20:23:25",
+      "itemScore": 83,
+      "jointScore": 62,
+      "total": 77,
+      "reviews": [
+        {
+          "ts": "3/6/2024 20:23:25",
+          "when": "Mar 2024",
+          "place": "Barbarello",
+          "itemName": "Salami al tarfuffo",
+          "curatorId": "marty",
+          "curatorName": "Marty",
+          "color": "#F0865A",
+          "price": 22,
+          "metrics": {
+            "taste": 100,
+            "texture": 100,
+            "fold": 80,
+            "sauce": 60,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 40,
+            "service": 40,
+            "value": 80
+          },
+          "itemScore": 84,
+          "jointScore": 53,
+          "total": 75,
+          "worth": 80,
+          "sauce": "White",
+          "cheese": "Parmazan",
+          "bias": {
+            "day": 60,
+            "hunger": 80,
+            "horny": 80
+          },
+          "quote": "Nah"
+        },
+        {
+          "ts": "3/6/2024 20:25:37",
+          "when": "Mar 2024",
+          "place": "Barbarello",
+          "itemName": "Salsiccia",
+          "curatorId": "simon",
+          "curatorName": "Simon",
+          "color": "#F5C445",
+          "price": 20,
+          "metrics": {
+            "taste": 60,
+            "texture": 100,
+            "fold": 100,
+            "sauce": 80,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 80,
+            "service": 80,
+            "value": 60
+          },
+          "itemScore": 84,
+          "jointScore": 73,
+          "total": 81,
+          "worth": 60,
+          "sauce": "Red",
+          "cheese": "Fior dit latte",
+          "bias": {
+            "day": 100,
+            "hunger": 40,
+            "horny": 80
+          },
+          "quote": ""
+        },
+        {
+          "ts": "3/6/2024 20:26:53",
+          "when": "Mar 2024",
+          "place": "Barbarello",
+          "itemName": "Scamorza e Jalapenis",
+          "curatorId": "axel",
+          "curatorName": "Axel",
+          "color": "#F48FBB",
+          "price": 17,
+          "metrics": {
+            "taste": 80,
+            "texture": 80,
+            "fold": 100,
+            "sauce": 80,
+            "tastiness": 60
+          },
+          "joint": {
+            "ambiance": 60,
+            "service": 40,
+            "value": 80
+          },
+          "itemScore": 80,
+          "jointScore": 60,
+          "total": 74,
+          "worth": 60,
+          "sauce": "Red",
+          "cheese": "Scamorza",
+          "bias": {
+            "day": 80,
+            "hunger": 60,
+            "horny": 80
+          },
+          "quote": "Interieur had geen ziel, denk ik toch en ja wie ben ik?"
+        }
+      ]
+    },
+    {
+      "id": "pizzeria-pugliese",
+      "name": "Pizzeria Pugliese",
+      "when": "Jul 2024",
+      "ts": "7/3/2024 20:27:29",
+      "itemScore": 78,
+      "jointScore": 76,
+      "total": 77,
+      "reviews": [
+        {
+          "ts": "7/3/2024 20:27:29",
+          "when": "Jul 2024",
+          "place": "Pizzeria Pugliese",
+          "itemName": "Picantina",
+          "curatorId": "axel",
+          "curatorName": "Axel",
+          "color": "#F48FBB",
+          "price": 18,
+          "metrics": {
+            "taste": 70,
+            "texture": 80,
+            "fold": 70,
+            "sauce": 70,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 70,
+            "service": 70,
+            "value": 90
+          },
+          "itemScore": 74,
+          "jointScore": 77,
+          "total": 75,
+          "worth": 80,
+          "sauce": "Red",
+          "cheese": "Ricotta",
+          "bias": {
+            "day": 60,
+            "hunger": 80,
+            "horny": 60
+          },
+          "quote": ""
+        },
+        {
+          "ts": "7/3/2024 20:27:40",
+          "when": "Jul 2024",
+          "place": "Pizzeria Pugliese",
+          "itemName": "Pizza piccanta",
+          "curatorId": "simon",
+          "curatorName": "Simon",
+          "color": "#F5C445",
+          "price": 18,
+          "metrics": {
+            "taste": 80,
+            "texture": 90,
+            "fold": 100,
+            "sauce": 90,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 70,
+            "service": 80,
+            "value": 80
+          },
+          "itemScore": 88,
+          "jointScore": 77,
+          "total": 85,
+          "worth": 90,
+          "sauce": "Red",
+          "cheese": "Ricotta",
+          "bias": {
+            "day": 90,
+            "hunger": 70,
+            "horny": 70
+          },
+          "quote": ""
+        },
+        {
+          "ts": "7/3/2024 20:27:50",
+          "when": "Jul 2024",
+          "place": "Pizzeria Pugliese",
+          "itemName": "Burata di nogwat",
+          "curatorId": "marty",
+          "curatorName": "Marty",
+          "color": "#F0865A",
+          "price": 22,
+          "metrics": {
+            "taste": 70,
+            "texture": 70,
+            "fold": 90,
+            "sauce": 70,
+            "tastiness": 60
+          },
+          "joint": {
+            "ambiance": 70,
+            "service": 80,
+            "value": 70
+          },
+          "itemScore": 72,
+          "jointScore": 73,
+          "total": 72,
+          "worth": 80,
+          "sauce": "Red",
+          "cheese": "Buffela",
+          "bias": {
+            "day": 80,
+            "hunger": 70,
+            "horny": 80
+          },
+          "quote": "Aperol hielp"
+        }
+      ]
+    },
+    {
+      "id": "nicoletta",
+      "name": "Nicoletta",
+      "when": "Nov 2023",
+      "ts": "11/8/2023 19:51:32",
+      "itemScore": 80,
+      "jointScore": 67,
+      "total": 76,
+      "reviews": [
+        {
+          "ts": "11/8/2023 19:51:32",
+          "when": "Nov 2023",
+          "place": "Nicoletta",
+          "itemName": "Donna Carmela",
+          "curatorId": "marty",
+          "curatorName": "Marty",
+          "color": "#F0865A",
+          "price": 23,
+          "metrics": {
+            "taste": 80,
+            "texture": 80,
+            "fold": 80,
+            "sauce": 60,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 60,
+            "service": 80,
+            "value": 60
+          },
+          "itemScore": 76,
+          "jointScore": 67,
+          "total": 73,
+          "worth": 60,
+          "sauce": "Red",
+          "cheese": "Buffela",
+          "bias": {
+            "day": 80,
+            "hunger": 80,
+            "horny": 40
+          },
+          "quote": ""
+        },
+        {
+          "ts": "11/8/2023 19:52:58",
+          "when": "Nov 2023",
+          "place": "Nicoletta",
+          "itemName": "Gustoza",
+          "curatorId": "axel",
+          "curatorName": "Axel",
+          "color": "#F48FBB",
+          "price": 23,
+          "metrics": {
+            "taste": 80,
+            "texture": 80,
+            "fold": 80,
+            "sauce": 100,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 60,
+            "service": 60,
+            "value": 60
+          },
+          "itemScore": 84,
+          "jointScore": 60,
+          "total": 77,
+          "worth": 100,
+          "sauce": "Red",
+          "cheese": "Mozerella, Gorgonzola",
+          "bias": {
+            "day": 60,
+            "hunger": 60,
+            "horny": 80
+          },
+          "quote": ""
+        },
+        {
+          "ts": "11/8/2023 19:53:04",
+          "when": "Nov 2023",
+          "place": "Nicoletta",
+          "itemName": "Deliziosa",
+          "curatorId": "simon",
+          "curatorName": "Simon",
+          "color": "#F5C445",
+          "price": 22,
+          "metrics": {
+            "taste": 80,
+            "texture": 80,
+            "fold": 80,
+            "sauce": 60,
+            "tastiness": 100
+          },
+          "joint": {
+            "ambiance": 60,
+            "service": 80,
+            "value": 80
+          },
+          "itemScore": 80,
+          "jointScore": 73,
+          "total": 78,
+          "worth": 80,
+          "sauce": "White",
+          "cheese": "No cheese",
+          "bias": {
+            "day": 60,
+            "hunger": 80,
+            "horny": 100
+          },
+          "quote": ""
+        }
+      ]
+    }
+  ],
+  "ranked": [
+    {
+      "id": "barbarello",
+      "name": "Barbarello",
+      "when": "Mar 2024",
+      "ts": "3/6/2024 20:23:25",
+      "itemScore": 83,
+      "jointScore": 62,
+      "total": 77,
+      "reviews": [
+        {
+          "ts": "3/6/2024 20:23:25",
+          "when": "Mar 2024",
+          "place": "Barbarello",
+          "itemName": "Salami al tarfuffo",
+          "curatorId": "marty",
+          "curatorName": "Marty",
+          "color": "#F0865A",
+          "price": 22,
+          "metrics": {
+            "taste": 100,
+            "texture": 100,
+            "fold": 80,
+            "sauce": 60,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 40,
+            "service": 40,
+            "value": 80
+          },
+          "itemScore": 84,
+          "jointScore": 53,
+          "total": 75,
+          "worth": 80,
+          "sauce": "White",
+          "cheese": "Parmazan",
+          "bias": {
+            "day": 60,
+            "hunger": 80,
+            "horny": 80
+          },
+          "quote": "Nah"
+        },
+        {
+          "ts": "3/6/2024 20:25:37",
+          "when": "Mar 2024",
+          "place": "Barbarello",
+          "itemName": "Salsiccia",
+          "curatorId": "simon",
+          "curatorName": "Simon",
+          "color": "#F5C445",
+          "price": 20,
+          "metrics": {
+            "taste": 60,
+            "texture": 100,
+            "fold": 100,
+            "sauce": 80,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 80,
+            "service": 80,
+            "value": 60
+          },
+          "itemScore": 84,
+          "jointScore": 73,
+          "total": 81,
+          "worth": 60,
+          "sauce": "Red",
+          "cheese": "Fior dit latte",
+          "bias": {
+            "day": 100,
+            "hunger": 40,
+            "horny": 80
+          },
+          "quote": ""
+        },
+        {
+          "ts": "3/6/2024 20:26:53",
+          "when": "Mar 2024",
+          "place": "Barbarello",
+          "itemName": "Scamorza e Jalapenis",
+          "curatorId": "axel",
+          "curatorName": "Axel",
+          "color": "#F48FBB",
+          "price": 17,
+          "metrics": {
+            "taste": 80,
+            "texture": 80,
+            "fold": 100,
+            "sauce": 80,
+            "tastiness": 60
+          },
+          "joint": {
+            "ambiance": 60,
+            "service": 40,
+            "value": 80
+          },
+          "itemScore": 80,
+          "jointScore": 60,
+          "total": 74,
+          "worth": 60,
+          "sauce": "Red",
+          "cheese": "Scamorza",
+          "bias": {
+            "day": 80,
+            "hunger": 60,
+            "horny": 80
+          },
+          "quote": "Interieur had geen ziel, denk ik toch en ja wie ben ik?"
+        }
+      ]
+    },
+    {
+      "id": "pizzeria-pugliese",
+      "name": "Pizzeria Pugliese",
+      "when": "Jul 2024",
+      "ts": "7/3/2024 20:27:29",
+      "itemScore": 78,
+      "jointScore": 76,
+      "total": 77,
+      "reviews": [
+        {
+          "ts": "7/3/2024 20:27:29",
+          "when": "Jul 2024",
+          "place": "Pizzeria Pugliese",
+          "itemName": "Picantina",
+          "curatorId": "axel",
+          "curatorName": "Axel",
+          "color": "#F48FBB",
+          "price": 18,
+          "metrics": {
+            "taste": 70,
+            "texture": 80,
+            "fold": 70,
+            "sauce": 70,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 70,
+            "service": 70,
+            "value": 90
+          },
+          "itemScore": 74,
+          "jointScore": 77,
+          "total": 75,
+          "worth": 80,
+          "sauce": "Red",
+          "cheese": "Ricotta",
+          "bias": {
+            "day": 60,
+            "hunger": 80,
+            "horny": 60
+          },
+          "quote": ""
+        },
+        {
+          "ts": "7/3/2024 20:27:40",
+          "when": "Jul 2024",
+          "place": "Pizzeria Pugliese",
+          "itemName": "Pizza piccanta",
+          "curatorId": "simon",
+          "curatorName": "Simon",
+          "color": "#F5C445",
+          "price": 18,
+          "metrics": {
+            "taste": 80,
+            "texture": 90,
+            "fold": 100,
+            "sauce": 90,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 70,
+            "service": 80,
+            "value": 80
+          },
+          "itemScore": 88,
+          "jointScore": 77,
+          "total": 85,
+          "worth": 90,
+          "sauce": "Red",
+          "cheese": "Ricotta",
+          "bias": {
+            "day": 90,
+            "hunger": 70,
+            "horny": 70
+          },
+          "quote": ""
+        },
+        {
+          "ts": "7/3/2024 20:27:50",
+          "when": "Jul 2024",
+          "place": "Pizzeria Pugliese",
+          "itemName": "Burata di nogwat",
+          "curatorId": "marty",
+          "curatorName": "Marty",
+          "color": "#F0865A",
+          "price": 22,
+          "metrics": {
+            "taste": 70,
+            "texture": 70,
+            "fold": 90,
+            "sauce": 70,
+            "tastiness": 60
+          },
+          "joint": {
+            "ambiance": 70,
+            "service": 80,
+            "value": 70
+          },
+          "itemScore": 72,
+          "jointScore": 73,
+          "total": 72,
+          "worth": 80,
+          "sauce": "Red",
+          "cheese": "Buffela",
+          "bias": {
+            "day": 80,
+            "hunger": 70,
+            "horny": 80
+          },
+          "quote": "Aperol hielp"
+        }
+      ]
+    },
+    {
+      "id": "nicoletta",
+      "name": "Nicoletta",
+      "when": "Nov 2023",
+      "ts": "11/8/2023 19:51:32",
+      "itemScore": 80,
+      "jointScore": 67,
+      "total": 76,
+      "reviews": [
+        {
+          "ts": "11/8/2023 19:51:32",
+          "when": "Nov 2023",
+          "place": "Nicoletta",
+          "itemName": "Donna Carmela",
+          "curatorId": "marty",
+          "curatorName": "Marty",
+          "color": "#F0865A",
+          "price": 23,
+          "metrics": {
+            "taste": 80,
+            "texture": 80,
+            "fold": 80,
+            "sauce": 60,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 60,
+            "service": 80,
+            "value": 60
+          },
+          "itemScore": 76,
+          "jointScore": 67,
+          "total": 73,
+          "worth": 60,
+          "sauce": "Red",
+          "cheese": "Buffela",
+          "bias": {
+            "day": 80,
+            "hunger": 80,
+            "horny": 40
+          },
+          "quote": ""
+        },
+        {
+          "ts": "11/8/2023 19:52:58",
+          "when": "Nov 2023",
+          "place": "Nicoletta",
+          "itemName": "Gustoza",
+          "curatorId": "axel",
+          "curatorName": "Axel",
+          "color": "#F48FBB",
+          "price": 23,
+          "metrics": {
+            "taste": 80,
+            "texture": 80,
+            "fold": 80,
+            "sauce": 100,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 60,
+            "service": 60,
+            "value": 60
+          },
+          "itemScore": 84,
+          "jointScore": 60,
+          "total": 77,
+          "worth": 100,
+          "sauce": "Red",
+          "cheese": "Mozerella, Gorgonzola",
+          "bias": {
+            "day": 60,
+            "hunger": 60,
+            "horny": 80
+          },
+          "quote": ""
+        },
+        {
+          "ts": "11/8/2023 19:53:04",
+          "when": "Nov 2023",
+          "place": "Nicoletta",
+          "itemName": "Deliziosa",
+          "curatorId": "simon",
+          "curatorName": "Simon",
+          "color": "#F5C445",
+          "price": 22,
+          "metrics": {
+            "taste": 80,
+            "texture": 80,
+            "fold": 80,
+            "sauce": 60,
+            "tastiness": 100
+          },
+          "joint": {
+            "ambiance": 60,
+            "service": 80,
+            "value": 80
+          },
+          "itemScore": 80,
+          "jointScore": 73,
+          "total": 78,
+          "worth": 80,
+          "sauce": "White",
+          "cheese": "No cheese",
+          "bias": {
+            "day": 60,
+            "hunger": 80,
+            "horny": 100
+          },
+          "quote": ""
+        }
+      ]
+    },
+    {
+      "id": "gio-pizza-bar",
+      "name": "Gio pizza bar",
+      "when": "Nov 2024",
+      "ts": "11/27/2024 21:38:37",
+      "itemScore": 78,
+      "jointScore": 71,
+      "total": 76,
+      "reviews": [
+        {
+          "ts": "11/27/2024 21:38:37",
+          "when": "Nov 2024",
+          "place": "Gio pizza bar",
+          "itemName": "Gio's",
+          "curatorId": "marty",
+          "curatorName": "Marty",
+          "color": "#F0865A",
+          "price": 17,
+          "metrics": {
+            "taste": 80,
+            "texture": 90,
+            "fold": 70,
+            "sauce": 80,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 90,
+            "service": 80,
+            "value": 70
+          },
+          "itemScore": 80,
+          "jointScore": 80,
+          "total": 80,
+          "worth": 70,
+          "sauce": "Red",
+          "cheese": "No cheese",
+          "bias": {
+            "day": 60,
+            "hunger": 80,
+            "horny": 60
+          },
+          "quote": "Ik was heel laat"
+        },
+        {
+          "ts": "11/27/2024 21:41:27",
+          "when": "Nov 2024",
+          "place": "Gio pizza bar",
+          "itemName": "Chilli my lips",
+          "curatorId": "axel",
+          "curatorName": "Axel",
+          "color": "#F48FBB",
+          "price": 16,
+          "metrics": {
+            "taste": 80,
+            "texture": 90,
+            "fold": 90,
+            "sauce": 80,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 60,
+            "service": 60,
+            "value": 80
+          },
+          "itemScore": 84,
+          "jointScore": 67,
+          "total": 79,
+          "worth": 80,
+          "sauce": "Red",
+          "cheese": "Mozerella",
+          "bias": {
+            "day": 70,
+            "hunger": 80,
+            "horny": 70
+          },
+          "quote": ""
+        },
+        {
+          "ts": "11/27/2024 21:48:07",
+          "when": "Nov 2024",
+          "place": "Gio pizza bar",
+          "itemName": "Meet my meat",
+          "curatorId": "simon",
+          "curatorName": "Simon",
+          "color": "#F5C445",
+          "price": 18,
+          "metrics": {
+            "taste": 70,
+            "texture": 70,
+            "fold": 70,
+            "sauce": 60,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 70,
+            "service": 50,
+            "value": 80
+          },
+          "itemScore": 70,
+          "jointScore": 67,
+          "total": 69,
+          "worth": 70,
+          "sauce": "White",
+          "cheese": "Mozerella",
+          "bias": {
+            "day": 70,
+            "hunger": 50,
+            "horny": 100
+          },
+          "quote": "Aangebrande smaak"
+        }
+      ]
+    },
+    {
+      "id": "graan",
+      "name": "Graan",
+      "when": "Dec 2023",
+      "ts": "12/17/2023 20:50:28",
+      "itemScore": 61,
+      "jointScore": 56,
+      "total": 60,
+      "reviews": [
+        {
+          "ts": "12/17/2023 20:50:28",
+          "when": "Dec 2023",
+          "place": "Graan",
+          "itemName": "Pancetta pompoen",
+          "curatorId": "simon",
+          "curatorName": "Simon",
+          "color": "#F5C445",
+          "price": 19.5,
+          "metrics": {
+            "taste": 80,
+            "texture": 60,
+            "fold": 40,
+            "sauce": 100,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 60,
+            "service": 60,
+            "value": 60
+          },
+          "itemScore": 72,
+          "jointScore": 60,
+          "total": 68,
+          "worth": 60,
+          "sauce": "White",
+          "cheese": "Geitenkaas",
+          "bias": {
+            "day": 60,
+            "hunger": 60,
+            "horny": 80
+          },
+          "quote": ""
+        },
+        {
+          "ts": "12/17/2023 20:51:40",
+          "when": "Dec 2023",
+          "place": "Graan",
+          "itemName": "Palmkool",
+          "curatorId": "axel",
+          "curatorName": "Axel",
+          "color": "#F48FBB",
+          "price": 19.5,
+          "metrics": {
+            "taste": 40,
+            "texture": 60,
+            "fold": 40,
+            "sauce": 80,
+            "tastiness": 80
+          },
+          "joint": {
+            "ambiance": 40,
+            "service": 60,
+            "value": 40
+          },
+          "itemScore": 60,
+          "jointScore": 47,
+          "total": 56,
+          "worth": 60,
+          "sauce": "Red",
+          "cheese": "Gorgonzola",
+          "bias": {
+            "day": 80,
+            "hunger": 40,
+            "horny": 40
+          },
+          "quote": ""
+        },
+        {
+          "ts": "12/17/2023 20:51:41",
+          "when": "Dec 2023",
+          "place": "Graan",
+          "itemName": "Zoete aardappel en pastinaak",
+          "curatorId": "marty",
+          "curatorName": "Marty",
+          "color": "#F0865A",
+          "price": 18.5,
+          "metrics": {
+            "taste": 40,
+            "texture": 40,
+            "fold": 40,
+            "sauce": 80,
+            "tastiness": 60
+          },
+          "joint": {
+            "ambiance": 40,
+            "service": 80,
+            "value": 60
+          },
+          "itemScore": 52,
+          "jointScore": 60,
+          "total": 54,
+          "worth": 60,
+          "sauce": "White",
+          "cheese": "Van Tricht",
+          "bias": {
+            "day": 80,
+            "hunger": 20,
+            "horny": 80
+          },
+          "quote": "Mooie bediening"
+        }
+      ]
+    },
+    {
+      "id": "la-pizza-bella",
+      "name": "La Pizza è Bella",
+      "when": "Oct 2024",
+      "ts": "10/16/2024 21:17:06",
+      "itemScore": 65,
+      "jointScore": 43,
+      "total": 58,
+      "reviews": [
+        {
+          "ts": "10/16/2024 21:17:06",
+          "when": "Oct 2024",
+          "place": "La Pizza è Bella",
+          "itemName": "Fungi y Something Calzone",
+          "curatorId": "marty",
+          "curatorName": "Marty",
+          "color": "#F0865A",
+          "price": 20,
+          "metrics": {
+            "taste": 70,
+            "texture": 80,
+            "fold": 70,
+            "sauce": 40,
+            "tastiness": 70
+          },
+          "joint": {
+            "ambiance": 30,
+            "service": 40,
+            "value": 60
+          },
+          "itemScore": 66,
+          "jointScore": 43,
+          "total": 59,
+          "worth": 70,
+          "sauce": "White",
+          "cheese": "Mozerella, Provolone",
+          "bias": {
+            "day": 70,
+            "hunger": 80,
+            "horny": 80
+          },
+          "quote": "Mwa"
+        },
+        {
+          "ts": "10/16/2024 21:17:14",
+          "when": "Oct 2024",
+          "place": "La Pizza è Bella",
+          "itemName": "Pizza pistachio",
+          "curatorId": "axel",
+          "curatorName": "Axel",
+          "color": "#F48FBB",
+          "price": 20,
+          "metrics": {
+            "taste": 60,
+            "texture": 50,
+            "fold": 70,
+            "sauce": 60,
+            "tastiness": 60
+          },
+          "joint": {
+            "ambiance": 40,
+            "service": 10,
+            "value": 60
+          },
+          "itemScore": 60,
+          "jointScore": 37,
+          "total": 53,
+          "worth": 40,
+          "sauce": "White",
+          "cheese": "Mozerella",
+          "bias": {
+            "day": 60,
+            "hunger": 50,
+            "horny": 40
+          },
+          "quote": "Worst service this side of the taal barriere"
+        },
+        {
+          "ts": "10/16/2024 21:22:33",
+          "when": "Oct 2024",
+          "place": "La Pizza è Bella",
+          "itemName": "Diabolica",
+          "curatorId": "simon",
+          "curatorName": "Simon",
+          "color": "#F5C445",
+          "price": 20,
+          "metrics": {
+            "taste": 60,
+            "texture": 60,
+            "fold": 80,
+            "sauce": 80,
+            "tastiness": 60
+          },
+          "joint": {
+            "ambiance": 50,
+            "service": 50,
+            "value": 50
+          },
+          "itemScore": 68,
+          "jointScore": 50,
+          "total": 63,
+          "worth": 70,
+          "sauce": "Red",
+          "cheese": "Mozerella",
+          "bias": {
+            "day": 70,
+            "hunger": 50,
+            "horny": 70
+          },
+          "quote": ""
+        }
+      ]
+    }
+  ],
+  "bestItem": {
+    "name": "Pizza piccanta",
+    "place": "Pizzeria Pugliese",
+    "curatorName": "Simon",
+    "score": 88
+  },
+  "trend": [
+    {
+      "when": "Nov 2023",
+      "value": 76
+    },
+    {
+      "when": "Dec 2023",
+      "value": 60
+    },
+    {
+      "when": "Mar 2024",
+      "value": 77
+    },
+    {
+      "when": "Jul 2024",
+      "value": 77
+    },
+    {
+      "when": "Oct 2024",
+      "value": 58
+    },
+    {
+      "when": "Nov 2024",
+      "value": 76
+    }
+  ],
+  "redVsWhite": {
+    "red": {
+      "avg": 77,
+      "count": 11
+    },
+    "white": {
+      "avg": 69,
+      "count": 7
+    }
+  },
+  "cheese": {
+    "favourite": {
+      "name": "Mozerella",
+      "count": 6,
+      "avg": 72
+    },
+    "topRated": {
+      "name": "Ricotta",
+      "avg": 81,
+      "count": 2
+    }
+  },
+  "curators": [
+    {
+      "id": "marty",
+      "name": "Marty",
+      "color": "#F0865A",
+      "count": 6,
+      "avgGiven": 72
+    },
+    {
+      "id": "axel",
+      "name": "Axel",
+      "color": "#F48FBB",
+      "count": 6,
+      "avgGiven": 74
+    },
+    {
+      "id": "simon",
+      "name": "Simon",
+      "color": "#F5C445",
+      "count": 6,
+      "avgGiven": 77
+    }
+  ],
+  "generous": "Simon",
+  "harsh": "Marty",
+  "horny": {
+    "avg": 72,
+    "note": "No meaningful link between friskiness and scores. Professionals."
+  },
+  "value": {
+    "name": "Chilli my lips",
+    "place": "Gio pizza bar",
+    "price": 16,
+    "score": 84
+  },
+  "fold": {
+    "name": "Salsiccia",
+    "place": "Barbarello",
+    "value": 100
+  },
+  "quotes": [
+    {
+      "text": "Mooie bediening",
+      "curatorName": "Marty",
+      "place": "Graan",
+      "item": "Zoete aardappel en pastinaak"
+    },
+    {
+      "text": "Nah",
+      "curatorName": "Marty",
+      "place": "Barbarello",
+      "item": "Salami al tarfuffo"
+    },
+    {
+      "text": "Interieur had geen ziel, denk ik toch en ja wie ben ik?",
+      "curatorName": "Axel",
+      "place": "Barbarello",
+      "item": "Scamorza e Jalapenis"
+    },
+    {
+      "text": "Aperol hielp",
+      "curatorName": "Marty",
+      "place": "Pizzeria Pugliese",
+      "item": "Burata di nogwat"
+    },
+    {
+      "text": "Mwa",
+      "curatorName": "Marty",
+      "place": "La Pizza è Bella",
+      "item": "Fungi y Something Calzone"
+    },
+    {
+      "text": "Worst service this side of the taal barriere",
+      "curatorName": "Axel",
+      "place": "La Pizza è Bella",
+      "item": "Pizza pistachio"
+    },
+    {
+      "text": "Ik was heel laat",
+      "curatorName": "Marty",
+      "place": "Gio pizza bar",
+      "item": "Gio's"
+    },
+    {
+      "text": "Aangebrande smaak",
+      "curatorName": "Simon",
+      "place": "Gio pizza bar",
+      "item": "Meet my meat"
+    }
+  ]
+}

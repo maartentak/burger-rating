@@ -94,6 +94,14 @@ export default function HomePage() {
             emoji="💨"
             delay={0.41}
           />
+          <ActionCard
+            href="/seasons"
+            bg="#A5B45B"
+            title="Previous seasons"
+            sub="The pizza era & other past glories."
+            emoji="📜"
+            delay={0.49}
+          />
         </div>
 
         {!activeId && !loading && (

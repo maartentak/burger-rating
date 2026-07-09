@@ -190,6 +190,18 @@ After that: Home → **Record a fart** → tap to record (grant mic access), nam
 optionally tag a joint, and drop it on the record. The patrol scores each fart
 0–100 and they rank on **The Fart Chart** (also shown per joint on its breakdown).
 
+## Previous Seasons (historical archives)
+
+Home → **Previous seasons** is a read-only archive of past club eras (currently
+**The Pizza Era**, 2023–24). It's static data baked into the app — **no database
+needed**. Each season is a JSON in `src/data/seasons/` rendered by
+`/seasons/[slug]`.
+
+To add another season later (new cuisine/year): drop its form export in
+`scripts/seasons/`, adapt `scripts/build-season-pizza.mjs` to it, run it to emit
+a JSON, and add that JSON to `SEASONS` in `src/lib/seasons.ts`. The recap pages
+render any cuisine.
+
 ## 5 · Add the curator photos
 
 Two ways:
