@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Patty Petrol — design tokens (from the handoff spec)
+   ============================================================ */
+@theme {
+  --font-display: "Gabarito", system-ui, sans-serif;
+
+  --color-ink: #1b1713;
+  --color-cream: #f6f1e5;
+  --color-paper: #fffdf7;
+  --color-warmcream: #fff6e3;
+  --color-pink: #f48fbb;
+  --color-deeppink: #e4589b;
+  --color-yellow: #f5c445;
+  --color-olive: #a5b45b;
+  --color-blue: #afc6e9;
+  --color-orange: #f0865a;
+  --color-tomato: #ee5a29;
+  --color-deepgreen: #2e4633;
+  --color-buntan: #efaf5f;
+  --color-pattybrown: #5d3a22;
+
+  --shadow-frame: 10px 12px 0 rgba(27, 23, 19, 0.12);
+  --shadow-hard: 4px 5px 0 rgba(27, 23, 19, 0.35);
+  --shadow-soft: 4px 4px 0 rgba(27, 23, 19, 0.2);
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  /* Never let the app scroll sideways. */
+  overflow-x: hidden;
+}
+
+input,
+button,
+textarea {
+  font-family: inherit;
+}
+
+input::placeholder {
+  color: rgba(27, 23, 19, 0.35);
+}
+
+/* Hard "sticker" border used all over the design. */
+.card-ink {
+  border: 2.5px solid var(--color-ink);
+}
+
+.shadow-frame {
+  box-shadow: var(--shadow-frame);
+}
+.shadow-hard {
+  box-shadow: var(--shadow-hard);
+}
+
+/* Eyebrow / section labels. */
+.eyebrow {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(27, 23, 19, 0.5);
+}
+
+/* ---- Mascot idle bob + wiggle ---- */
+@keyframes ppbob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+@keyframes ppwig {
+  0%,
+  100% {
+    transform: rotate(-7deg);
+  }
+  50% {
+    transform: rotate(-3deg);
+  }
+}
+.pp-bob {
+  animation: ppbob 3.2s ease-in-out infinite;
+}
+.pp-wig {
+  animation: ppwig 2.6s ease-in-out infinite;
+  transform-origin: center;
+}
+
+/* Hide scrollbars on the phone-like scroll regions but keep scrolling. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-bob,
+  .pp-wig {
+    animation: none;
+  }
+}
