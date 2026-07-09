@@ -195,7 +195,9 @@ optionally tag a joint, and drop it on the record. The patrol scores each fart
 Two ways:
 
 - **In the app:** Curators → **Edit badge → 📷 Photo**. Saves to the database and
-  overrides everything else.
+  overrides everything else. The **✂️ Cut out bg** toggle (on by default) removes
+  a solid photo background so the curator's signature colour shows through — if it
+  ever trims too much, switch it off.
 - **Baked in:** drop the files in `public/avatars/` named `axel.png`,
   `simon.png`, `marty.png` (lowercase). Missing files just show the coloured
   initial — nothing breaks. See `public/avatars/README.md`.

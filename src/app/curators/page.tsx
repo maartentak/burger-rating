@@ -101,6 +101,9 @@ function CuratorCard({
 }) {
   const [name, setName] = useState(curator.name);
   const [avatarUrl, setAvatarUrl] = useState<string | null | undefined>(curator.avatarUrl);
+  const [cutout, setCutout] = useState(true);
+  const [busy, setBusy] = useState(false);
+  const rawFile = useRef<File | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -108,11 +111,26 @@ function CuratorCard({
     setAvatarUrl(curator.avatarUrl);
   }, [curator, isEditing]);
 
+  async function process(f: File, cut: boolean) {
+    setBusy(true);
+    try {
+      setAvatarUrl(await downscale(f, 220, cut));
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
     if (!f) return;
-    const url = await downscale(f, 220);
-    setAvatarUrl(url);
+    rawFile.current = f;
+    await process(f, cutout);
+  }
+
+  async function toggleCutout() {
+    const next = !cutout;
+    setCutout(next);
+    if (rawFile.current) await process(rawFile.current, next);
   }
 
   return (
@@ -158,33 +176,43 @@ function CuratorCard({
       {isEditing ? (
         <div className="mt-3 flex items-center gap-2">
           <input ref={fileRef} type="file" accept="image/*" hidden onChange={onFile} />
-          <button
-            onClick={() => fileRef.current?.click()}
-            className="card-ink rounded-full px-3 py-2 font-extrabold"
-            style={{ fontSize: 13, background: "#AFC6E9" }}
-          >
-            📷 Photo
-          </button>
-          {avatarUrl && (
+          <div className="flex w-full flex-wrap items-center gap-2">
             <button
-              onClick={() => setAvatarUrl(null)}
+              onClick={() => fileRef.current?.click()}
               className="card-ink rounded-full px-3 py-2 font-extrabold"
-              style={{ fontSize: 13, background: "#FFFDF7" }}
+              style={{ fontSize: 13, background: "#AFC6E9" }}
             >
-              Clear
+              {busy ? "…" : "📷 Photo"}
             </button>
-          )}
-          <div className="flex-1" />
-          <button onClick={onCancel} className="px-2 font-extrabold underline" style={{ fontSize: 13 }}>
-            Cancel
-          </button>
-          <button
-            onClick={() => onSave({ name: name.trim() || curator.name, avatarUrl })}
-            className="card-ink rounded-full px-4 py-2 font-extrabold"
-            style={{ fontSize: 13, background: "#F5C445" }}
-          >
-            Save
-          </button>
+            <button
+              onClick={toggleCutout}
+              className="card-ink rounded-full px-3 py-2 font-extrabold"
+              style={{ fontSize: 13, background: cutout ? "#A5B45B" : "#FFFDF7", color: cutout ? "#fff" : "#1B1713" }}
+              title="Remove the background so your curator colour shows through"
+            >
+              ✂️ Cut out bg {cutout ? "ON" : "OFF"}
+            </button>
+            {avatarUrl && (
+              <button
+                onClick={() => { setAvatarUrl(null); rawFile.current = null; }}
+                className="card-ink rounded-full px-3 py-2 font-extrabold"
+                style={{ fontSize: 13, background: "#FFFDF7" }}
+              >
+                Clear
+              </button>
+            )}
+            <div className="flex-1" />
+            <button onClick={onCancel} className="px-2 font-extrabold underline" style={{ fontSize: 13 }}>
+              Cancel
+            </button>
+            <button
+              onClick={() => onSave({ name: name.trim() || curator.name, avatarUrl })}
+              className="card-ink rounded-full px-4 py-2 font-extrabold"
+              style={{ fontSize: 13, background: "#F5C445" }}
+            >
+              Save
+            </button>
+          </div>
         </div>
       ) : (
         <div className="mt-3 flex gap-2">
@@ -211,11 +239,12 @@ function CuratorCard({
 }
 
 /**
- * Downscale an uploaded image to a square-ish data URL to keep it lightweight.
- * Outputs PNG so transparent avatars stay transparent (JPEG would flatten alpha
- * to black) — the signature colour circle then shows through behind the cut-out.
+ * Downscale an uploaded image to a square-ish PNG data URL. When `cutout` is on,
+ * the background is removed (flood-filled from the edges) so it goes transparent
+ * and the curator's signature colour shows through — this fixes photos that come
+ * in with a solid black/white background. Outputs PNG to preserve the alpha.
  */
-function downscale(file: File, max: number): Promise<string> {
+function downscale(file: File, max: number, cutout: boolean): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => {
@@ -230,6 +259,7 @@ function downscale(file: File, max: number): Promise<string> {
         const ctx = canvas.getContext("2d");
         if (!ctx) return reject(new Error("no ctx"));
         ctx.drawImage(img, 0, 0, w, h);
+        if (cutout) cutoutBackground(ctx, w, h);
         resolve(canvas.toDataURL("image/png"));
       };
       img.onerror = reject;
@@ -238,4 +268,50 @@ function downscale(file: File, max: number): Promise<string> {
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
+}
+
+/**
+ * Removes the border-connected background: flood-fills inward from every edge
+ * pixel, clearing pixels close in colour to the sampled edge colour. Because it
+ * only follows the region connected to the border, dark details INSIDE the
+ * subject (beards, hair, jackets) are preserved.
+ */
+function cutoutBackground(ctx: CanvasRenderingContext2D, w: number, h: number) {
+  const image = ctx.getImageData(0, 0, w, h);
+  const d = image.data;
+
+  // Reference background colour = average of the four corners.
+  let r = 0, g = 0, b = 0;
+  for (const [x, y] of [[0, 0], [w - 1, 0], [0, h - 1], [w - 1, h - 1]]) {
+    const i = (y * w + x) * 4;
+    r += d[i]; g += d[i + 1]; b += d[i + 2];
+  }
+  r /= 4; g /= 4; b /= 4;
+
+  const T = 70 * 70; // squared colour-distance threshold
+  const near = (i: number) => {
+    if (d[i + 3] === 0) return true; // already transparent
+    const dr = d[i] - r, dg = d[i + 1] - g, db = d[i + 2] - b;
+    return dr * dr + dg * dg + db * db < T;
+  };
+
+  const visited = new Uint8Array(w * h);
+  const stack: number[] = [];
+  for (let x = 0; x < w; x++) { stack.push(x, (h - 1) * w + x); }
+  for (let y = 0; y < h; y++) { stack.push(y * w, y * w + (w - 1)); }
+
+  while (stack.length) {
+    const p = stack.pop()!;
+    if (p < 0 || p >= w * h || visited[p]) continue;
+    visited[p] = 1;
+    const i = p * 4;
+    if (!near(i)) continue;
+    d[i + 3] = 0;
+    const x = p % w, y = (p - x) / w;
+    if (x + 1 < w) stack.push(p + 1);
+    if (x - 1 >= 0) stack.push(p - 1);
+    if (y + 1 < h) stack.push(p + w);
+    if (y - 1 >= 0) stack.push(p - w);
+  }
+  ctx.putImageData(image, 0, 0);
 }
