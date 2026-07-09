@@ -81,7 +81,12 @@ If you'd rather create it on Neon's own site:
 
 ### Create the tables + load sample data
 
-Once `DATABASE_URL` is set **in your local `.env.local`**, run:
+**Option A — no terminal (easiest):** open your Neon project → **SQL Editor**
+(left sidebar) → open the `neon-setup.sql` file from this repo, copy its entire
+contents, paste into the editor, and click **Run**. That creates all three tables
+and loads the sample board in one shot. Done.
+
+**Option B — terminal:** with `DATABASE_URL` set in your local `.env.local`:
 
 ```bash
 npm run db:push    # creates the tables in Neon from the schema
