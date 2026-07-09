@@ -67,6 +67,14 @@ export default function CuratorsPage() {
             </motion.div>
           ))}
         </div>
+
+        <button
+          onClick={() => router.push("/admin")}
+          className="card-ink mt-5 flex items-center justify-center gap-2 rounded-full py-3 font-extrabold text-ink"
+          style={{ background: "#FFFDF7", fontSize: 13.5 }}
+        >
+          ⚙️ Admin desk · manage joints
+        </button>
       </div>
     </PhoneShell>
   );

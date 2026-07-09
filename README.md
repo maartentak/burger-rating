@@ -145,6 +145,25 @@ That's it — share the URL with the patrol. 🎉
 
 ---
 
+## 4b · Remove the sample joints
+
+The seed loads six demo joints. Two ways to clear them once you're logging real
+visits:
+
+- **In the app (no SQL):** Curators → **⚙️ Admin desk**. Set yourself as **Marty**
+  (he's the admin), then delete any joint — its reviews go with it.
+- **All six at once (SQL):** paste this into the Neon SQL Editor. It removes only
+  the seeded samples by name, so your own joints are safe:
+
+  ```sql
+  DELETE FROM establishments
+  WHERE name IN ('Bun Intended','Holy Smokes','Griddle Me This',
+                 'Patty & Co','Burger Barn','Flat Freddy''s');
+  ```
+
+Individual reviews can also be removed from a joint's breakdown → tap a burger or
+a curator take → **Remove review**.
+
 ## 5 · Add the curator photos
 
 Two ways:

@@ -14,6 +14,7 @@ import {
 import { useCurators } from "@/lib/useCurators";
 import { saveDraft } from "@/lib/draft";
 import { Mascot } from "@/components/art";
+import { QuestionArt } from "@/components/QuestionArt";
 import { RulerDial } from "@/components/RulerDial";
 
 const SECTION_ORDER: Section[] = ["THE BURGER", "THE JOINT", "CURATOR BIAS"];
@@ -196,9 +197,17 @@ export default function RatePage({
               </span>
             </div>
 
-            {/* Mascot */}
-            <div className="mt-3.5 flex justify-center">
-              <Mascot value={end ? 100 : dialValue} size={168} />
+            {/* Hero art — a per-question sticker; the mascot returns at the end */}
+            <div className="mt-3.5 flex h-[150px] items-center justify-center">
+              {end ? (
+                <Mascot value={100} size={160} />
+              ) : (
+                <QuestionArt
+                  id={(step as { q: Question }).q.id}
+                  value={dialValue}
+                  reactive={(step as { q: Question }).q.type === "dial"}
+                />
+              )}
             </div>
 
             {/* Title / sub */}

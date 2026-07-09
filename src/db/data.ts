@@ -123,6 +123,16 @@ export async function deleteEvaluation(id: string): Promise<boolean> {
   return rows.length > 0;
 }
 
+/** Deletes a whole joint and its reviews (evaluations cascade via FK). */
+export async function deleteEstablishment(id: string): Promise<boolean> {
+  const db = getDb();
+  const rows = await db
+    .delete(establishments)
+    .where(eq(establishments.id, id))
+    .returning({ id: establishments.id });
+  return rows.length > 0;
+}
+
 export async function listSummaries(): Promise<EstablishmentSummary[]> {
   const { establishments: ests, evaluations: evals } = await loadRaw();
   return ests
