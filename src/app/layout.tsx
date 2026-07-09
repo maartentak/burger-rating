@@ -6,6 +6,18 @@ export const metadata: Metadata = {
   description:
     "The Patty Patrol's private burger-rating rig. Rate the burger, rate the joint, crown the best patty in town.",
   applicationName: "Patty Petrol",
+  appleWebApp: {
+    capable: true,
+    title: "Patty Petrol",
+    statusBarStyle: "default",
+  },
+  icons: {
+    icon: [
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+  },
 };
 
 export const viewport: Viewport = {

@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/gen-icons.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "icons": "node scripts/gen-icons.mjs",
     "db:push": "drizzle-kit push",
     "db:seed": "tsx src/db/seed.ts"
   },
@@ -25,6 +27,7 @@
     "@types/react-dom": "^19.0.3",
     "dotenv": "^16.4.7",
     "drizzle-kit": "^0.30.1",
+    "sharp": "^0.33.5",
     "tailwindcss": "^4.0.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"

@@ -164,6 +164,24 @@ visits:
 Individual reviews can also be removed from a joint's breakdown → tap a burger or
 a curator take → **Remove review**.
 
+## 4c · Install it like an app (and set the icon)
+
+The app is installable to a phone home screen / desktop (PWA) — on iPhone Safari:
+**Share → Add to Home Screen**; on Android Chrome you'll get an "Install" prompt.
+
+**The home-screen icon** is generated automatically into `/public` before every
+build (`scripts/gen-icons.mjs`). To use your own artwork:
+
+1. Put your image in `public/` named **`icon-source.png`** (jpg/webp also work).
+   Easiest with no terminal: on GitHub open the repo → `public` folder →
+   **Add file → Upload files** → drag it in → name it `icon-source.png` →
+   **Commit**.
+2. Redeploy on Vercel. The build squares & pads it onto a cream background and
+   writes every needed size (192, 512, apple-touch, favicon). Done.
+
+If no `icon-source.*` is present it falls back to the on-brand burger mascot
+(`assets/icon-default.svg`). To regenerate locally: `npm run icons`.
+
 ## 5 · Add the curator photos
 
 Two ways:
