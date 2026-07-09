@@ -104,8 +104,24 @@ export const fartScores = pgTable("fart_scores", {
     .defaultNow(),
 });
 
+/** A shared bill — who paid, how much, and who splits it (Splitwise-style). */
+export const expenses = pgTable("expenses", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  establishmentId: uuid("establishment_id").references(() => establishments.id, {
+    onDelete: "set null",
+  }),
+  description: text("description").notNull().default(""),
+  amountCents: integer("amount_cents").notNull(), // stored in cents to avoid float drift
+  paidBy: text("paid_by").notNull(), // curator id who paid
+  participants: jsonb("participants").$type<string[]>().notNull().default([]), // curator ids splitting it
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
 export type EstablishmentRow = typeof establishments.$inferSelect;
 export type EvaluationRow = typeof evaluations.$inferSelect;
 export type CuratorRow = typeof curators.$inferSelect;
 export type FartRow = typeof farts.$inferSelect;
 export type FartScoreRow = typeof fartScores.$inferSelect;
+export type ExpenseRow = typeof expenses.$inferSelect;

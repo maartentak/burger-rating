@@ -4,9 +4,16 @@ import {
   curators as curatorsTable,
   establishments,
   evaluations,
+  expenses,
   farts,
   fartScores,
 } from "./schema";
+import {
+  computeBalances,
+  settle,
+  type Balance,
+  type Settlement,
+} from "@/lib/split";
 import type { EstablishmentRow, EvaluationRow } from "./schema";
 import { buildDemoData } from "./demo";
 import { DEFAULT_CURATORS, type Curator } from "@/lib/curators";
@@ -249,6 +256,143 @@ export async function deleteFart(id: string): Promise<boolean> {
   const db = getDb();
   const rows = await db.delete(farts).where(eq(farts.id, id)).returning({ id: farts.id });
   return rows.length > 0;
+}
+
+// ---------------- Bill splitting 💸 ----------------
+
+export interface ExpenseView {
+  id: string;
+  description: string;
+  amountCents: number;
+  paidBy: string;
+  paidByName: string;
+  color: string;
+  participants: string[];
+  establishmentId: string | null;
+  establishmentName: string | null;
+  createdAt: string;
+}
+
+export interface SplitSummary {
+  expenses: ExpenseView[];
+  balances: (Balance & { name: string; color: string })[];
+  settlements: (Settlement & {
+    fromName: string;
+    toName: string;
+    fromColor: string;
+    toColor: string;
+  })[];
+  totalCents: number;
+  demo: boolean;
+}
+
+export async function createExpense(input: {
+  paidBy: string;
+  amountCents: number;
+  participants: string[];
+  description?: string;
+  establishmentId?: string | null;
+}) {
+  const db = getDb();
+  const [row] = await db
+    .insert(expenses)
+    .values({
+      paidBy: input.paidBy,
+      amountCents: input.amountCents,
+      participants: input.participants,
+      description: (input.description ?? "").slice(0, 120),
+      establishmentId: input.establishmentId ?? null,
+    })
+    .returning({ id: expenses.id });
+  return row;
+}
+
+export async function listExpenses(
+  establishmentId?: string
+): Promise<ExpenseView[]> {
+  if (!isDbConfigured) return [];
+  const db = getDb();
+  const rows = establishmentId
+    ? await db
+        .select()
+        .from(expenses)
+        .where(eq(expenses.establishmentId, establishmentId))
+        .orderBy(desc(expenses.createdAt))
+    : await db.select().from(expenses).orderBy(desc(expenses.createdAt));
+
+  const [estRows, curators] = await Promise.all([
+    db
+      .select({ id: establishments.id, name: establishments.name })
+      .from(establishments),
+    getCurators(),
+  ]);
+  const estName = (id: string | null) =>
+    id ? estRows.find((e) => e.id === id)?.name ?? null : null;
+  const cName = (id: string) => curators.find((c) => c.id === id)?.name ?? id;
+  const cColor = (id: string) =>
+    curators.find((c) => c.id === id)?.color ?? "#F48FBB";
+
+  return rows.map((e) => ({
+    id: e.id,
+    description: e.description || "Untitled bill",
+    amountCents: e.amountCents,
+    paidBy: e.paidBy,
+    paidByName: cName(e.paidBy),
+    color: cColor(e.paidBy),
+    participants: e.participants,
+    establishmentId: e.establishmentId,
+    establishmentName: estName(e.establishmentId),
+    createdAt: e.createdAt.toISOString(),
+  }));
+}
+
+export async function deleteExpense(id: string): Promise<boolean> {
+  const db = getDb();
+  const rows = await db
+    .delete(expenses)
+    .where(eq(expenses.id, id))
+    .returning({ id: expenses.id });
+  return rows.length > 0;
+}
+
+/** Everything the split screen needs: bills, per-curator balances, settle-up plan. */
+export async function getSplitSummary(
+  establishmentId?: string
+): Promise<SplitSummary> {
+  const curators = await getCurators();
+  const expenseViews = await listExpenses(establishmentId);
+  const cName = (id: string) => curators.find((c) => c.id === id)?.name ?? id;
+  const cColor = (id: string) =>
+    curators.find((c) => c.id === id)?.color ?? "#F48FBB";
+
+  const balances = computeBalances(
+    expenseViews.map((e) => ({
+      id: e.id,
+      amountCents: e.amountCents,
+      paidBy: e.paidBy,
+      participants: e.participants,
+    })),
+    curators.map((c) => c.id)
+  );
+  const settlements = settle(balances);
+
+  return {
+    expenses: expenseViews,
+    balances: balances.map((b) => ({
+      ...b,
+      name: cName(b.curatorId),
+      color: cColor(b.curatorId),
+    })),
+    settlements: settlements.map((s) => ({
+      ...s,
+      fromName: cName(s.fromId),
+      toName: cName(s.toId),
+      fromColor: cColor(s.fromId),
+      toColor: cColor(s.toId),
+    })),
+    totalCents: expenseViews.reduce((sum, e) => sum + e.amountCents, 0),
+    demo: IS_DEMO,
+  };
 }
 
 export async function listSummaries(): Promise<EstablishmentSummary[]> {
