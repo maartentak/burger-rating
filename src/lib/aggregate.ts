@@ -2,23 +2,27 @@ import type { EstablishmentRow, EvaluationRow } from "@/db/schema";
 import { DEFAULT_CURATORS, type Curator, type CuratorId } from "./curators";
 import {
   burgerComponentMean,
+  evaluationTotal,
   jointComponentMean,
   mean,
   round,
   tier,
 } from "./scoring";
 
+/** One curator's take, rolled up across however many burgers they rated here. */
 export interface CuratorTake {
   curatorId: string;
   name: string;
   color: string;
-  score: number; // gut burger overall
-  jointScore: number;
-  burgerName: string;
+  score: number; // avg gut burger overall across their burgers
+  jointScore: number; // avg gut joint
   quote: string;
+  burgerCount: number;
+  evaluationIds: string[];
 }
 
 export interface BurgerEntry {
+  evaluationId: string;
   name: string;
   orderedBy: string; // curator name
   curatorId: string;
@@ -26,6 +30,39 @@ export interface BurgerEntry {
   style: string[];
   protein: string | null;
   price: string;
+}
+
+/** Full per-evaluation breakdown, used by the detail modal. */
+export interface EvaluationView {
+  id: string;
+  curatorId: string;
+  name: string; // curator name
+  color: string;
+  burgerName: string;
+  price: string;
+  style: string[];
+  protein: string | null;
+  again: boolean | null;
+  beenHere: boolean | null;
+  quote: string;
+  total: number;
+  burger: {
+    patty: number;
+    bun: number;
+    cheese: number;
+    sauce: number;
+    build: number;
+    value: number;
+    overall: number;
+  };
+  joint: {
+    ambiance: number;
+    lighting: number;
+    service: number;
+    comfort: number;
+    overallJoint: number;
+  };
+  bias: { hunger: number; stress: number; horny: number };
 }
 
 export interface Disagreement {
@@ -54,6 +91,7 @@ export interface EstablishmentDetail extends EstablishmentSummary {
   burgers: BurgerEntry[];
   jointBars: { label: string; value: number }[];
   curatorTakes: CuratorTake[];
+  evaluations: EvaluationView[];
   disagreements: Disagreement[];
   biggestDisagreement: Disagreement | null;
 }
@@ -96,12 +134,21 @@ function disagreementsFor(
   evals: EvaluationRow[],
   curators: Curator[]
 ): Disagreement[] {
-  if (evals.length < 2) return [];
+  // Collapse to one value per curator per dimension so a curator who rated
+  // multiple burgers is a single voice — disagreements are between curators.
+  const curatorIds = [...new Set(evals.map((e) => e.curatorId))];
+  if (curatorIds.length < 2) return [];
   const out: Disagreement[] = [];
   for (const dim of DISAGREEMENT_DIMS) {
-    const vals = evals.map((e) => ({
-      curatorId: e.curatorId,
-      score: e[dim.key] as number,
+    const vals = curatorIds.map((curatorId) => ({
+      curatorId,
+      score: round(
+        mean(
+          evals
+            .filter((e) => e.curatorId === curatorId)
+            .map((e) => e[dim.key] as number)
+        )
+      ),
     }));
     let lo = vals[0];
     let hi = vals[0];
@@ -153,6 +200,7 @@ export function detail(
 ): EstablishmentDetail {
   const base = summarize(est, evals);
   const burgers: BurgerEntry[] = evals.map((e) => ({
+    evaluationId: e.id,
     name: e.burgerName || "Unnamed burger",
     orderedBy: curatorName(e.curatorId, curators).name,
     curatorId: e.curatorId,
@@ -167,24 +215,65 @@ export function detail(
     { label: "Service", value: round(mean(evals.map((e) => e.service))) },
     { label: "Comfort", value: round(mean(evals.map((e) => e.comfort))) },
   ];
-  const curatorTakes: CuratorTake[] = evals.map((e) => {
+
+  const evaluations: EvaluationView[] = evals.map((e) => {
     const c = curatorName(e.curatorId, curators);
     return {
+      id: e.id,
       curatorId: e.curatorId,
       name: c.name,
       color: c.color,
-      score: e.overall,
-      jointScore: e.overallJoint,
-      burgerName: e.burgerName,
+      burgerName: e.burgerName || "Unnamed burger",
+      price: e.price,
+      style: e.style ?? [],
+      protein: e.protein,
+      again: e.again,
+      beenHere: e.beenHere,
       quote: e.quote,
+      total: evaluationTotal(e),
+      burger: {
+        patty: e.patty, bun: e.bun, cheese: e.cheese, sauce: e.sauce,
+        build: e.build, value: e.value, overall: e.overall,
+      },
+      joint: {
+        ambiance: e.ambiance, lighting: e.lighting, service: e.service,
+        comfort: e.comfort, overallJoint: e.overallJoint,
+      },
+      bias: { hunger: e.hunger, stress: e.stress, horny: e.horny },
     };
   });
+
+  // Roll up takes per curator so two burgers by one curator become one entry.
+  const byCurator = new Map<string, EvaluationRow[]>();
+  for (const e of evals) {
+    const arr = byCurator.get(e.curatorId) ?? [];
+    arr.push(e);
+    byCurator.set(e.curatorId, arr);
+  }
+  const curatorTakes: CuratorTake[] = [...byCurator.entries()].map(
+    ([curatorId, group]) => {
+      const c = curatorName(curatorId, curators);
+      const withQuote = group.find((g) => g.quote?.trim());
+      return {
+        curatorId,
+        name: c.name,
+        color: c.color,
+        score: round(mean(group.map((g) => g.overall))),
+        jointScore: round(mean(group.map((g) => g.overallJoint))),
+        quote: (withQuote ?? group[0]).quote,
+        burgerCount: group.length,
+        evaluationIds: group.map((g) => g.id),
+      };
+    }
+  );
+
   const disagreements = disagreementsFor(evals, curators);
   return {
     ...base,
     burgers,
     jointBars,
     curatorTakes,
+    evaluations,
     disagreements,
     biggestDisagreement: disagreements[0] ?? null,
   };

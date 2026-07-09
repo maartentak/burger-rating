@@ -22,6 +22,8 @@ export default function CuratePage() {
   const [existing, setExisting] = useState<EstablishmentSummary[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [geoState, setGeoState] = useState<"idle" | "asking" | "on" | "off">("idle");
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -29,6 +31,21 @@ export default function CuratePage() {
       .then((r) => r.json())
       .then((d) => setExisting(d.establishments ?? []))
       .catch(() => {});
+
+    // Ask for device location so search shows nearby joints first.
+    if ("geolocation" in navigator) {
+      setGeoState("asking");
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+          setGeoState("on");
+        },
+        () => setGeoState("off"),
+        { enableHighAccuracy: false, timeout: 8000, maximumAge: 600000 }
+      );
+    } else {
+      setGeoState("off");
+    }
   }, []);
 
   useEffect(() => {
@@ -40,7 +57,8 @@ export default function CuratePage() {
     setSearching(true);
     timer.current = setTimeout(async () => {
       try {
-        const r = await fetch(`/api/places/search?q=${encodeURIComponent(q)}`);
+        const geo = coords ? `&lat=${coords.lat}&lng=${coords.lng}` : "";
+        const r = await fetch(`/api/places/search?q=${encodeURIComponent(q)}${geo}`);
         const d = await r.json();
         setResults(d.results ?? []);
         setPlacesConfigured(d.configured ?? false);
@@ -50,7 +68,7 @@ export default function CuratePage() {
         setSearching(false);
       }
     }, 350);
-  }, [q]);
+  }, [q, coords]);
 
   async function pickPlace(p: PlaceResult) {
     setBusy(true);
@@ -133,11 +151,18 @@ export default function CuratePage() {
             className="card-ink w-full rounded-2xl bg-white px-4 py-3.5 font-bold text-ink outline-none"
             style={{ fontSize: 16 }}
           />
-          {!placesConfigured && q.length >= 2 && (
-            <p className="mt-2 font-bold" style={{ fontSize: 11.5, color: "rgba(27,23,19,.5)" }}>
-              Showing mock results — add GOOGLE_PLACES_API_KEY for the real thing.
-            </p>
-          )}
+          <p className="mt-2 font-bold" style={{ fontSize: 11.5, color: "rgba(27,23,19,.5)" }}>
+            {geoState === "on"
+              ? "📍 Sorted for joints near you."
+              : geoState === "asking"
+              ? "📍 Finding your location…"
+              : geoState === "off"
+              ? "📍 Location off — searching everywhere. Allow location for nearby results."
+              : ""}
+            {!placesConfigured && q.length >= 2
+              ? " · Showing mock results (add GOOGLE_PLACES_API_KEY for the real thing)."
+              : ""}
+          </p>
         </div>
 
         <AnimatePresence>

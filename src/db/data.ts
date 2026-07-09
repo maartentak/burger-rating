@@ -114,6 +114,15 @@ export async function createEvaluation(
   return row;
 }
 
+export async function deleteEvaluation(id: string): Promise<boolean> {
+  const db = getDb();
+  const rows = await db
+    .delete(evaluations)
+    .where(eq(evaluations.id, id))
+    .returning({ id: evaluations.id });
+  return rows.length > 0;
+}
+
 export async function listSummaries(): Promise<EstablishmentSummary[]> {
   const { establishments: ests, evaluations: evals } = await loadRaw();
   return ests
@@ -204,10 +213,18 @@ export async function getDashboard(): Promise<Dashboard> {
   let beef: Dashboard["beef"] = null;
   for (const est of ests) {
     const group = evals.filter((v) => v.establishmentId === est.id);
-    if (group.length < 2) continue;
-    let lo = group[0];
-    let hi = group[0];
-    for (const g of group) {
+    // One voice per curator (average their burgers) so a beef is cross-curator.
+    const curIds = [...new Set(group.map((g) => g.curatorId))];
+    if (curIds.length < 2) continue;
+    const perCurator = curIds.map((cid) => ({
+      curatorId: cid,
+      overall: round(
+        mean(group.filter((g) => g.curatorId === cid).map((g) => g.overall))
+      ),
+    }));
+    let lo = perCurator[0];
+    let hi = perCurator[0];
+    for (const g of perCurator) {
       if (g.overall < lo.overall) lo = g;
       if (g.overall > hi.overall) hi = g;
     }

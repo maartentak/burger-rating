@@ -7,8 +7,9 @@ import { PhoneShell } from "@/components/PhoneShell";
 import { BackButton } from "@/components/BackButton";
 import { Avatar } from "@/components/Avatar";
 import { BurgerIcon } from "@/components/art";
+import { EvaluationModal } from "@/components/EvaluationModal";
 import { tier } from "@/lib/scoring";
-import type { EstablishmentDetail } from "@/lib/aggregate";
+import type { EstablishmentDetail, EvaluationView } from "@/lib/aggregate";
 
 export default function EstablishmentPage({
   params,
@@ -27,13 +28,23 @@ function Inner({ id }: { id: string }) {
   const router = useRouter();
   const mine = useSearchParams().get("mine");
   const [d, setD] = useState<EstablishmentDetail | null>(null);
+  const [demo, setDemo] = useState(false);
   const [notFound, setNotFound] = useState(false);
+  const [modal, setModal] = useState<{ title: string; evals: EvaluationView[] } | null>(null);
+
+  function load() {
+    return fetch(`/api/establishments/${id}`)
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((res) => {
+        setD(res.establishment);
+        setDemo(Boolean(res.demo));
+      })
+      .catch(() => setNotFound(true));
+  }
 
   useEffect(() => {
-    fetch(`/api/establishments/${id}`)
-      .then((r) => (r.ok ? r.json() : Promise.reject()))
-      .then((res) => setD(res.establishment))
-      .catch(() => setNotFound(true));
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   if (notFound) {
@@ -128,26 +139,33 @@ function Inner({ id }: { id: string }) {
             {/* Burgers */}
             <SectionLabel>THE BURGERS</SectionLabel>
             <div className="flex flex-col gap-2.5">
-              {d.burgers.map((b, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className="card-ink flex items-center gap-3 rounded-2xl px-3.5 py-3"
-                  style={{ background: "#FFFDF7" }}
-                >
-                  <BurgerIcon />
-                  <div className="flex-1">
-                    <div className="font-black text-ink" style={{ fontSize: 16.5 }}>{b.name}</div>
-                    <div className="font-semibold" style={{ fontSize: 12.5, color: "rgba(27,23,19,.5)" }}>
-                      ordered by {b.orderedBy}
-                      {b.protein ? ` · ${b.protein}` : ""}
+              {d.burgers.map((b, i) => {
+                const ev = d.evaluations.find((e) => e.id === b.evaluationId);
+                return (
+                  <motion.button
+                    key={b.evaluationId}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    whileHover={{ x: -2, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => ev && setModal({ title: "BURGER BREAKDOWN", evals: [ev] })}
+                    className="card-ink flex items-center gap-3 rounded-2xl px-3.5 py-3 text-left"
+                    style={{ background: "#FFFDF7" }}
+                  >
+                    <BurgerIcon />
+                    <div className="flex-1">
+                      <div className="font-black text-ink" style={{ fontSize: 16.5 }}>{b.name}</div>
+                      <div className="font-semibold" style={{ fontSize: 12.5, color: "rgba(27,23,19,.5)" }}>
+                        ordered by {b.orderedBy}
+                        {b.protein ? ` · ${b.protein}` : ""}
+                      </div>
                     </div>
-                  </div>
-                  <span className="font-black text-ink" style={{ fontSize: 20 }}>{b.score}</span>
-                </motion.div>
-              ))}
+                    <span className="font-black text-ink" style={{ fontSize: 20 }}>{b.score}</span>
+                    <span className="font-black" style={{ fontSize: 16, color: "rgba(27,23,19,.4)" }}>›</span>
+                  </motion.button>
+                );
+              })}
             </div>
 
             {/* Joint bars */}
@@ -199,18 +217,31 @@ function Inner({ id }: { id: string }) {
             <SectionLabel>CURATOR TAKES</SectionLabel>
             <div className="flex flex-col gap-2.5">
               {d.curatorTakes.map((c, i) => (
-                <motion.div
-                  key={i}
+                <motion.button
+                  key={c.curatorId}
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className="card-ink flex items-center gap-3 rounded-2xl px-3.5 py-3"
+                  whileHover={{ x: -2, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() =>
+                    setModal({
+                      title: `${c.name.toUpperCase()}'S TAKE`,
+                      evals: d.evaluations.filter((e) => e.curatorId === c.curatorId),
+                    })
+                  }
+                  className="card-ink flex items-center gap-3 rounded-2xl px-3.5 py-3 text-left"
                   style={{ background: "#FFFDF7" }}
                 >
                   <Avatar name={c.name} color={c.color} size={42} />
                   <div className="flex-1">
                     <div className="font-black text-ink" style={{ fontSize: 15 }}>
                       {c.name} <span className="font-extrabold" style={{ color: "rgba(27,23,19,.45)" }}>· {c.score}</span>
+                      {c.burgerCount > 1 && (
+                        <span className="font-extrabold" style={{ color: "rgba(27,23,19,.4)", fontSize: 12 }}>
+                          {" "}· {c.burgerCount} burgers
+                        </span>
+                      )}
                     </div>
                     {c.quote && (
                       <div className="font-semibold" style={{ fontSize: 13.5, color: "rgba(27,23,19,.65)", lineHeight: 1.35 }}>
@@ -218,7 +249,8 @@ function Inner({ id }: { id: string }) {
                       </div>
                     )}
                   </div>
-                </motion.div>
+                  <span className="font-black" style={{ fontSize: 16, color: "rgba(27,23,19,.4)" }}>›</span>
+                </motion.button>
               ))}
             </div>
           </>
@@ -232,6 +264,19 @@ function Inner({ id }: { id: string }) {
           To the Grease Board →
         </button>
       </div>
+
+      {modal && (
+        <EvaluationModal
+          evaluations={modal.evals}
+          title={modal.title}
+          demo={demo}
+          onClose={() => setModal(null)}
+          onDeleted={async () => {
+            setModal(null);
+            await load();
+          }}
+        />
+      )}
     </PhoneShell>
   );
 }

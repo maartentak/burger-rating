@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getEstablishmentDetail } from "@/db/data";
+import { getEstablishmentDetail, IS_DEMO } from "@/db/data";
 
 export const runtime = "nodejs";
 
@@ -12,5 +12,5 @@ export async function GET(
   if (!detail) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
-  return NextResponse.json({ establishment: detail });
+  return NextResponse.json({ establishment: detail, demo: IS_DEMO });
 }

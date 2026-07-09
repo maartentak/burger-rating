@@ -8,11 +8,55 @@ import {
   QUESTION_PALETTE,
   defaultAnswers,
   type AnswerMap,
+  type Question,
+  type Section,
 } from "@/lib/questions";
 import { useCurators } from "@/lib/useCurators";
 import { saveDraft } from "@/lib/draft";
 import { Mascot } from "@/components/art";
 import { RulerDial } from "@/components/RulerDial";
+
+const SECTION_ORDER: Section[] = ["THE BURGER", "THE JOINT", "CURATOR BIAS"];
+const SECTION_BG: Record<Section, string> = {
+  "THE BURGER": "#F48FBB",
+  "THE JOINT": "#AFC6E9",
+  "CURATOR BIAS": "#F0865A",
+};
+const SECTION_TITLE: Record<Section, string> = {
+  "THE BURGER": "The Burger",
+  "THE JOINT": "The Joint",
+  "CURATOR BIAS": "Curator Bias",
+};
+const SECTION_BLURB: Record<Section, string> = {
+  "THE BURGER": "Name it, price it, then rate every layer of the stack.",
+  "THE JOINT": "Now the venue — vibe, lighting, service, comfort.",
+  "CURATOR BIAS": "Be honest about your state of mind. The data needs it.",
+};
+const SECTION_EMOJI: Record<Section, string> = {
+  "THE BURGER": "🍔",
+  "THE JOINT": "🏠",
+  "CURATOR BIAS": "🧠",
+};
+
+type Step =
+  | { kind: "intro"; section: Section; part: number; count: number }
+  | { kind: "question"; q: Question; qNum: number }
+  | { kind: "end" };
+
+function buildFlow(): { steps: Step[]; totalQuestions: number } {
+  const steps: Step[] = [];
+  let qNum = 0;
+  SECTION_ORDER.forEach((section, i) => {
+    const qs = QUESTIONS.filter((q) => q.section === section);
+    steps.push({ kind: "intro", section, part: i + 1, count: qs.length });
+    for (const q of qs) {
+      qNum += 1;
+      steps.push({ kind: "question", q, qNum });
+    }
+  });
+  steps.push({ kind: "end" });
+  return { steps, totalQuestions: qNum };
+}
 
 export default function RatePage({
   params,
@@ -22,60 +66,78 @@ export default function RatePage({
   const { id } = use(params);
   const router = useRouter();
   const { activeId, loading } = useCurators();
-  const [step, setStep] = useState(0);
+  const { steps, totalQuestions } = useMemo(buildFlow, []);
+  const [i, setI] = useState(0);
   const [answers, setAnswers] = useState<AnswerMap>(defaultAnswers);
 
-  const n = QUESTIONS.length;
-  const end = step >= n;
-  const q = QUESTIONS[Math.min(step, n - 1)];
-  const bg = QUESTION_PALETTE[Math.min(step, n - 1) % QUESTION_PALETTE.length];
+  const step = steps[i];
+  const end = step.kind === "end";
 
-  // Redirect to picker if no curator chosen.
   useEffect(() => {
     if (!loading && !activeId) router.replace("/curate");
   }, [loading, activeId, router]);
 
   const dialValue = useMemo(() => {
-    if (end || q.type !== "dial") return 78;
-    return Number(answers[q.id] ?? 50);
-  }, [answers, q, end]);
+    if (step.kind !== "question" || step.q.type !== "dial") return 78;
+    return Number(answers[step.q.id] ?? 50);
+  }, [answers, step]);
 
   function setAns(key: string, v: AnswerMap[string]) {
     setAnswers((a) => ({ ...a, [key]: v }));
   }
 
-  const canNext = end || q.type !== "text" || String(answers.name).trim().length > 0;
+  const canNext =
+    step.kind !== "question" ||
+    step.q.type !== "text" ||
+    String(answers.name).trim().length > 0;
 
   function next() {
     if (!canNext) return;
-    if (end) return;
-    if (step + 1 >= n) {
-      setStep(n); // show the "wrap" end state
-      return;
-    }
-    setStep(step + 1);
+    if (i < steps.length - 1) setI(i + 1);
   }
   function back() {
-    if (step === 0) {
+    if (i === 0) {
       router.push("/curate");
       return;
     }
-    setStep(Math.max(0, step - 1));
+    setI(i - 1);
   }
-
   function finish() {
     if (!activeId) return;
     saveDraft({ establishmentId: id, curatorId: activeId, answers });
     router.push(`/curate/${id}/scorecard`);
   }
 
-  const pct = Math.round((Math.min(step, n) / n) * 100);
-  const stepLabel = `${String(Math.min(step + 1, n)).padStart(2, "0")} / ${String(n).padStart(2, "0")}`;
+  // Progress = questions completed so far / total.
+  const questionsDone = steps
+    .slice(0, i)
+    .filter((s) => s.kind === "question").length;
+  const pct = end ? 100 : Math.round((questionsDone / totalQuestions) * 100);
+
+  const bg = end
+    ? "#2E4633"
+    : step.kind === "intro"
+    ? SECTION_BG[step.section]
+    : QUESTION_PALETTE[(step.qNum - 1) % QUESTION_PALETTE.length];
+
+  const isLastQuestionOfAll =
+    step.kind === "question" && step.qNum === totalQuestions;
+
+  const topLabel = end
+    ? "DONE"
+    : step.kind === "intro"
+    ? `PART ${step.part} / 3`
+    : `${String(step.qNum).padStart(2, "0")} / ${String(totalQuestions).padStart(2, "0")}`;
+
+  const dark = end;
 
   return (
-    <div className="flex min-h-[100dvh] w-full justify-center sm:items-center sm:py-8" style={{ background: "#EAE3D3" }}>
+    <div
+      className="flex min-h-[100dvh] w-full justify-center sm:items-center sm:py-8"
+      style={{ background: "#EAE3D3" }}
+    >
       <motion.div
-        animate={{ background: end ? "#2E4633" : bg }}
+        animate={{ background: bg }}
         transition={{ duration: 0.35 }}
         className="relative flex min-h-[100dvh] w-full flex-col overflow-hidden sm:h-[812px] sm:min-h-0 sm:max-w-[390px] sm:rounded-[48px] sm:border-[3px] sm:border-ink sm:shadow-frame"
       >
@@ -90,8 +152,11 @@ export default function RatePage({
           >
             ←
           </motion.button>
-          <div className="font-extrabold text-ink" style={{ fontSize: 15, letterSpacing: ".04em" }}>
-            {stepLabel}
+          <div
+            className="font-extrabold"
+            style={{ fontSize: 15, letterSpacing: ".04em", color: dark ? "#FFF6E3" : "#1B1713" }}
+          >
+            {topLabel}
           </div>
           <button
             onClick={() => router.push("/")}
@@ -117,144 +182,246 @@ export default function RatePage({
           />
         </div>
 
-        {/* Section pill */}
-        <div className="mt-5 flex justify-center">
-          <span
-            className="rounded-full px-3.5 py-1.5 font-extrabold"
-            style={{ background: "#1B1713", color: "#FFF6E3", fontSize: 12, letterSpacing: ".14em" }}
-          >
-            {end ? "ALL DONE" : q.section}
-          </span>
-        </div>
-
-        {/* Mascot */}
-        <div className="mt-3.5 flex justify-center">
-          <Mascot value={end ? 100 : dialValue} size={168} />
-        </div>
-
-        {/* Title / sub */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={end ? "end" : q.id}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.22 }}
-            className="px-8 pt-2 text-center"
-          >
-            <div
-              className="font-black leading-[1.02] text-ink"
-              style={{ fontSize: 36, letterSpacing: "-.01em", color: end ? "#FFF6E3" : "#1B1713" }}
-            >
-              {end ? "That's a wrap!" : q.title}
+        {step.kind === "intro" ? (
+          <IntroScreen step={step} onStart={next} onBack={back} />
+        ) : (
+          <>
+            {/* Section pill */}
+            <div className="mt-5 flex justify-center">
+              <span
+                className="rounded-full px-3.5 py-1.5 font-extrabold"
+                style={{ background: "#1B1713", color: "#FFF6E3", fontSize: 12, letterSpacing: ".14em" }}
+              >
+                {end ? "ALL DONE" : (step as { q: Question }).q.section}
+              </span>
             </div>
-            <div
-              className="mt-2 font-semibold"
-              style={{ fontSize: 15, color: end ? "rgba(255,246,227,.7)" : "rgba(27,23,19,.65)" }}
-            >
-              {end ? "Your scorecard is sizzling." : q.sub}
+
+            {/* Mascot */}
+            <div className="mt-3.5 flex justify-center">
+              <Mascot value={end ? 100 : dialValue} size={168} />
             </div>
-          </motion.div>
-        </AnimatePresence>
 
-        {/* Input area */}
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={end ? "end-input" : q.id}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.18 }}
-            >
-              {end ? (
-                <div className="px-10 text-center font-bold" style={{ color: "#FFF6E3", fontSize: 16 }}>
-                  Ketchup with your results on the scorecard →
+            {/* Title / sub */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={end ? "end" : (step as { q: Question }).q.id}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.22 }}
+                className="px-8 pt-2 text-center"
+              >
+                <div
+                  className="font-black leading-[1.02]"
+                  style={{ fontSize: 36, letterSpacing: "-.01em", color: end ? "#FFF6E3" : "#1B1713" }}
+                >
+                  {end ? "That's a wrap!" : (step as { q: Question }).q.title}
                 </div>
-              ) : q.type === "dial" ? (
-                <RulerDial value={dialValue} onChange={(v) => setAns(q.id, v)} />
-              ) : q.type === "text" ? (
-                <div className="px-8">
-                  <input
-                    autoFocus
-                    value={String(answers.name)}
-                    onChange={(e) => setAns("name", e.target.value)}
-                    placeholder="e.g. The Big Kahuna"
-                    className="card-ink w-full rounded-[20px] px-5 py-4 text-center font-extrabold text-ink outline-none"
-                    style={{ background: "rgba(255,255,255,.8)", fontSize: 24 }}
-                  />
+                <div
+                  className="mt-2 font-semibold"
+                  style={{ fontSize: 15, color: end ? "rgba(255,246,227,.7)" : "rgba(27,23,19,.65)" }}
+                >
+                  {end ? "Your scorecard is sizzling." : (step as { q: Question }).q.sub}
                 </div>
-              ) : q.type === "price" ? (
-                <div className="flex items-center justify-center gap-2.5 px-8">
-                  <span className="font-black text-ink" style={{ fontSize: 56 }}>€</span>
-                  <input
-                    value={String(answers.price)}
-                    onChange={(e) => setAns("price", e.target.value.replace(/[^0-9.,]/g, ""))}
-                    inputMode="decimal"
-                    placeholder="0"
-                    className="card-ink w-[180px] rounded-[20px] px-4 py-2 text-center font-black text-ink outline-none"
-                    style={{ background: "rgba(255,255,255,.8)", fontSize: 56 }}
-                  />
-                </div>
-              ) : q.type === "chips" ? (
-                <ChipRow
-                  options={q.options ?? []}
-                  selected={answers.style}
-                  onToggle={(l) =>
-                    setAns(
-                      "style",
-                      answers.style.includes(l)
-                        ? answers.style.filter((x) => x !== l)
-                        : [...answers.style, l]
-                    )
-                  }
-                />
-              ) : q.type === "protein" ? (
-                <ChipRow
-                  options={q.options ?? []}
-                  selected={answers.protein ? [answers.protein] : []}
-                  onToggle={(l) => setAns("protein", answers.protein === l ? null : l)}
-                />
-              ) : q.type === "toggle" ? (
-                <Toggle
-                  value={answers[q.id] as boolean | null}
-                  yesLabel={q.id === "beenHere" ? "YES" : "YES"}
-                  noLabel={q.id === "beenHere" ? "FIRST" : "NOPE"}
-                  onPick={(v) => setAns(q.id, v)}
-                />
-              ) : null}
-            </motion.div>
-          </AnimatePresence>
-        </div>
+              </motion.div>
+            </AnimatePresence>
 
-        {/* Bottom nav */}
-        <div className="flex items-center gap-3 px-5 pb-8 pt-2">
-          <button
-            onClick={back}
-            className="px-2 py-3 font-extrabold underline"
-            style={{ fontSize: 16, color: end ? "#FFF6E3" : "#1B1713", textDecorationThickness: 2.5 }}
-          >
-            Back
-          </button>
-          <motion.button
-            onClick={end ? finish : next}
-            whileTap={{ scale: 0.98 }}
-            disabled={!canNext}
-            className="card-ink flex-1 rounded-full py-4 font-extrabold"
-            style={{
-              background: end ? "#F5C445" : "#1B1713",
-              color: end ? "#1B1713" : "#FFF6E3",
-              fontSize: 19,
-              opacity: canNext ? 1 : 0.5,
-              boxShadow: end ? "4px 5px 0 rgba(0,0,0,.35)" : "none",
-            }}
-          >
-            {end ? "See the scorecard →" : step + 1 >= n ? "Finish →" : "Next →"}
-          </motion.button>
-        </div>
+            {/* Input area */}
+            <div className="flex min-h-0 flex-1 flex-col justify-center">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={end ? "end-input" : (step as { q: Question }).q.id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.18 }}
+                >
+                  {end ? (
+                    <div className="px-10 text-center font-bold" style={{ color: "#FFF6E3", fontSize: 16 }}>
+                      Ketchup with your results on the scorecard →
+                    </div>
+                  ) : (
+                    <QuestionInput
+                      q={(step as { q: Question }).q}
+                      answers={answers}
+                      dialValue={dialValue}
+                      setAns={setAns}
+                    />
+                  )}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Bottom nav */}
+            <div className="flex items-center gap-3 px-5 pb-8 pt-2">
+              <button
+                onClick={back}
+                className="px-2 py-3 font-extrabold underline"
+                style={{ fontSize: 16, color: dark ? "#FFF6E3" : "#1B1713", textDecorationThickness: 2.5 }}
+              >
+                Back
+              </button>
+              <motion.button
+                onClick={end ? finish : next}
+                whileTap={{ scale: 0.98 }}
+                disabled={!canNext}
+                className="card-ink flex-1 rounded-full py-4 font-extrabold"
+                style={{
+                  background: end ? "#F5C445" : "#1B1713",
+                  color: end ? "#1B1713" : "#FFF6E3",
+                  fontSize: 19,
+                  opacity: canNext ? 1 : 0.5,
+                  boxShadow: end ? "4px 5px 0 rgba(0,0,0,.35)" : "none",
+                }}
+              >
+                {end ? "See the scorecard →" : isLastQuestionOfAll ? "Finish →" : "Next →"}
+              </motion.button>
+            </div>
+          </>
+        )}
       </motion.div>
     </div>
   );
+}
+
+function IntroScreen({
+  step,
+  onStart,
+  onBack,
+}: {
+  step: { section: Section; part: number; count: number };
+  onStart: () => void;
+  onBack: () => void;
+}) {
+  return (
+    <motion.div
+      key={`intro-${step.section}`}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex min-h-0 flex-1 flex-col"
+    >
+      <div className="flex flex-1 flex-col items-center justify-center px-8 text-center">
+        <motion.div
+          initial={{ scale: 0.6, rotate: -8 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ type: "spring", stiffness: 200, damping: 12 }}
+          className="card-ink grid h-24 w-24 place-items-center rounded-3xl"
+          style={{ background: "rgba(255,255,255,.85)", fontSize: 48 }}
+        >
+          {SECTION_EMOJI[step.section]}
+        </motion.div>
+        <div className="mt-6 eyebrow" style={{ fontSize: 13 }}>
+          PART {step.part} OF 3
+        </div>
+        <div className="mt-1 font-black leading-none text-ink" style={{ fontSize: 44, letterSpacing: "-.02em" }}>
+          {SECTION_TITLE[step.section]}
+        </div>
+        <div className="mt-3 font-semibold text-ink" style={{ fontSize: 15.5, opacity: 0.7, lineHeight: 1.4 }}>
+          {SECTION_BLURB[step.section]}
+        </div>
+        <div
+          className="card-ink mt-5 rounded-full px-4 py-1.5 font-extrabold text-ink"
+          style={{ background: "rgba(255,255,255,.6)", fontSize: 12.5 }}
+        >
+          {step.count} question{step.count === 1 ? "" : "s"}
+        </div>
+      </div>
+      <div className="flex items-center gap-3 px-5 pb-8 pt-2">
+        <button onClick={onBack} className="px-2 py-3 font-extrabold underline" style={{ fontSize: 16, textDecorationThickness: 2.5 }}>
+          Back
+        </button>
+        <motion.button
+          onClick={onStart}
+          whileTap={{ scale: 0.98 }}
+          className="card-ink flex-1 rounded-full py-4 font-extrabold"
+          style={{ background: "#1B1713", color: "#FFF6E3", fontSize: 19 }}
+        >
+          {step.part === 1 ? "Let's go →" : "Continue →"}
+        </motion.button>
+      </div>
+    </motion.div>
+  );
+}
+
+function QuestionInput({
+  q,
+  answers,
+  dialValue,
+  setAns,
+}: {
+  q: Question;
+  answers: AnswerMap;
+  dialValue: number;
+  setAns: (k: string, v: AnswerMap[string]) => void;
+}) {
+  if (q.type === "dial") {
+    return <RulerDial value={dialValue} onChange={(v) => setAns(q.id, v)} />;
+  }
+  if (q.type === "text") {
+    return (
+      <div className="px-8">
+        <input
+          autoFocus
+          value={String(answers.name)}
+          onChange={(e) => setAns("name", e.target.value)}
+          placeholder="e.g. The Big Kahuna"
+          className="card-ink w-full rounded-[20px] px-5 py-4 text-center font-extrabold text-ink outline-none"
+          style={{ background: "rgba(255,255,255,.8)", fontSize: 24 }}
+        />
+      </div>
+    );
+  }
+  if (q.type === "price") {
+    return (
+      <div className="flex items-center justify-center gap-2.5 px-8">
+        <span className="font-black text-ink" style={{ fontSize: 56 }}>€</span>
+        <input
+          value={String(answers.price)}
+          onChange={(e) => setAns("price", e.target.value.replace(/[^0-9.,]/g, ""))}
+          inputMode="decimal"
+          placeholder="0"
+          className="card-ink w-[180px] rounded-[20px] px-4 py-2 text-center font-black text-ink outline-none"
+          style={{ background: "rgba(255,255,255,.8)", fontSize: 56 }}
+        />
+      </div>
+    );
+  }
+  if (q.type === "chips") {
+    return (
+      <ChipRow
+        options={q.options ?? []}
+        selected={answers.style}
+        onToggle={(l) =>
+          setAns(
+            "style",
+            answers.style.includes(l)
+              ? answers.style.filter((x) => x !== l)
+              : [...answers.style, l]
+          )
+        }
+      />
+    );
+  }
+  if (q.type === "protein") {
+    return (
+      <ChipRow
+        options={q.options ?? []}
+        selected={answers.protein ? [answers.protein] : []}
+        onToggle={(l) => setAns("protein", answers.protein === l ? null : l)}
+      />
+    );
+  }
+  if (q.type === "toggle") {
+    return (
+      <Toggle
+        value={answers[q.id] as boolean | null}
+        yesLabel="YES"
+        noLabel={q.id === "beenHere" ? "FIRST" : "NOPE"}
+        onPick={(v) => setAns(q.id, v)}
+      />
+    );
+  }
+  return null;
 }
 
 function ChipRow({

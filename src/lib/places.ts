@@ -44,12 +44,31 @@ function deriveArea(p: GooglePlace): string {
   );
 }
 
-export async function searchPlaces(query: string): Promise<PlaceResult[]> {
+export async function searchPlaces(
+  query: string,
+  coords?: { lat: number; lng: number }
+): Promise<PlaceResult[]> {
   const q = query.trim();
   if (!q) return [];
 
   const key = process.env.GOOGLE_PLACES_API_KEY;
   if (!key) return mockSearch(q);
+
+  const body: Record<string, unknown> = {
+    textQuery: q,
+    includedType: "restaurant",
+    maxResultCount: 8,
+  };
+  // Bias results toward the curator's location (device geolocation) so nearby
+  // joints float to the top instead of a worldwide match.
+  if (coords) {
+    body.locationBias = {
+      circle: {
+        center: { latitude: coords.lat, longitude: coords.lng },
+        radius: 30000, // 30 km
+      },
+    };
+  }
 
   const res = await fetch("https://places.googleapis.com/v1/places:searchText", {
     method: "POST",
@@ -59,11 +78,7 @@ export async function searchPlaces(query: string): Promise<PlaceResult[]> {
       "X-Goog-FieldMask":
         "places.id,places.displayName,places.formattedAddress,places.location,places.photos,places.addressComponents",
     },
-    body: JSON.stringify({
-      textQuery: q,
-      includedType: "restaurant",
-      maxResultCount: 8,
-    }),
+    body: JSON.stringify(body),
     // Places responses shouldn't be cached across curators.
     cache: "no-store",
   });

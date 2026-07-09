@@ -26,7 +26,7 @@ export default function BoardPage() {
 
   return (
     <PhoneShell bg="#F6F1E5">
-      <AppHeader active={active} />
+      <AppHeader active={active} showBack />
       <DemoBanner show={Boolean(dash?.demo)} />
 
       <div className="flex-1 overflow-y-auto px-5 pb-10 pt-3 no-scrollbar">

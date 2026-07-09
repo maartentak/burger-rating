@@ -37,18 +37,17 @@ export default function HomePage() {
             style={{ fontSize: 14.5, color: "rgba(27,23,19,.55)" }}
           >
             {active
-              ? `Evening, ${active.name}. Who's cooking?`
+              ? `Evening, ${active.name}. Tap your badge up top to switch.`
               : "Pick your patrol badge to begin."}
           </p>
         </motion.div>
 
-        {/* Curator switcher */}
-        <div className="mt-5">
-          <div className="eyebrow mb-2 text-center">WHO ARE YOU?</div>
-          <div className="flex justify-center gap-4">
-            {curators.map((c, i) => {
-              const on = c.id === activeId;
-              return (
+        {/* Curator switcher — only until you've picked. Switch later via the avatar. */}
+        {!activeId && (
+          <div className="mt-5">
+            <div className="eyebrow mb-2 text-center">WHO ARE YOU?</div>
+            <div className="flex justify-center gap-4">
+              {curators.map((c, i) => (
                 <motion.button
                   key={c.id}
                   onClick={() => setActive(c.id)}
@@ -58,31 +57,18 @@ export default function HomePage() {
                   whileTap={{ scale: 0.92 }}
                   className="flex flex-col items-center gap-1.5"
                 >
-                  <div
-                    style={{
-                      transform: on ? "translateY(-2px)" : "none",
-                      filter: on ? "none" : "grayscale(.15)",
-                      opacity: on ? 1 : 0.55,
-                      boxShadow: on ? "4px 5px 0 rgba(27,23,19,.2)" : "none",
-                      borderRadius: 999,
-                    }}
-                  >
-                    <Avatar name={c.name} color={c.color} avatarUrl={c.avatarUrl} size={58} />
-                  </div>
-                  <span
-                    className="font-extrabold"
-                    style={{ fontSize: 12, opacity: on ? 1 : 0.5 }}
-                  >
+                  <Avatar name={c.name} color={c.color} avatarUrl={c.avatarUrl} size={58} />
+                  <span className="font-extrabold" style={{ fontSize: 12, opacity: 0.6 }}>
                     {c.name}
                   </span>
                 </motion.button>
-              );
-            })}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Action cards */}
-        <div className="mt-7 flex flex-col gap-4">
+        <div className={`${activeId ? "mt-8" : "mt-7"} flex flex-col gap-4`}>
           <ActionCard
             href={activeId ? "/curate" : "#"}
             disabled={!activeId}
